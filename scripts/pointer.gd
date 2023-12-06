@@ -6,10 +6,23 @@ var is_active: bool = false
 var point_incrementation = 0.1
 var midpoint: Vector3 = Vector3.ZERO
 var distance: int = 10
+var sphere_meshes: Array = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	var t = 0
+	while t <= 1:
+		var mesh_instance = MeshInstance3D.new()
+		var sphere_mesh = SphereMesh.new()
+		sphere_mesh.radius = 0.05
+		sphere_mesh.height = 0.10
+		mesh_instance.visible = false
+		mesh_instance.mesh = sphere_mesh
+		mesh_instance.global_position = Vector3.ZERO
+		add_child(mesh_instance)
+		
+		sphere_meshes.append(mesh_instance)
+		t += point_incrementation
 
 func quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float):
 	var q0 = p0.lerp(p1, t)
@@ -19,12 +32,17 @@ func quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float):
 	
 func generate_points(start, mid, end):
 	var points = Array() 
-	for t in range(0.1, 1 + point_incrementation, point_incrementation):
+	var t = 0
+	while t <= 1:
 		points.append(quadratic_bezier(start, mid, end, t))
+		t += point_incrementation
 	return points
+	
 
 func alter_meshes(points):
-	pass
+	for i in range(len(sphere_meshes)):
+		sphere_meshes[i].visible = true
+		sphere_meshes[i].global_position = points[i]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -33,16 +51,14 @@ func _process(delta):
 		var end = point_two.global_position
 		var mid = (start + end) / 2.0
 		var points = generate_points(start, mid, end)
-		print(start, mid, end)
-		print(points)
+		alter_meshes(points)
 	
 func _button_pressed(name: String):
 	if name == "trigger_click":
 		is_active = true
-		midpoint
-		# Build/move meshes here for the given points on the first iteration
 	
 func _button_released(name: String):
 	if name == "trigger_click":
 		is_active = false
-		# set meshes to invisible
+		for i in range(len(sphere_meshes)):
+			sphere_meshes[i].visible = false
