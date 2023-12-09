@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b78lkpvaip7xv"]
+[gd_scene load_steps=12 format=3 uid="uid://b78lkpvaip7xv"]
 
 [ext_resource type="Material" uid="uid://drptuif4iilgr" path="res://Materials/ObsMat.tres" id="1_yqj0w"]
 
@@ -27,6 +27,16 @@ size = Vector3(8, 6, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5wqvg"]
 size = Vector3(8, 6, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hsv66"]
+material = ExtResource("1_yqj0w")
+size = Vector3(16, 8, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_855oi"]
+size = Vector3(16, 8, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wtera"]
+size = Vector3(6, 1, 6)
 
 [node name="Node3D" type="Node3D"]
 
@@ -69,4 +79,39 @@ mesh = SubResource("PlaneMesh_b04w6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StartPlat/1stPlat/1stPlatform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_kubjn")
+
+[node name="Obs2" type="Node3D" parent="StartPlat/1stPlat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.21869, 2, -5.03243)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StartPlat/1stPlat/Obs2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.76846, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StartPlat/1stPlat/Obs2/StaticBody3D"]
+mesh = SubResource("BoxMesh_hsv66")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StartPlat/1stPlat/Obs2/StaticBody3D"]
+shape = SubResource("BoxShape3D_855oi")
+
+[node name="2ndPlat" type="Node3D" parent="StartPlat/1stPlat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.34218, 0, -11.2293)
+
+[node name="2ndPlatform" type="StaticBody3D" parent="StartPlat/1stPlat/2ndPlat"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StartPlat/1stPlat/2ndPlat/2ndPlatform"]
+mesh = SubResource("PlaneMesh_b04w6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StartPlat/1stPlat/2ndPlat/2ndPlatform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_kubjn")
+
+[node name="3rdPlat" type="Node3D" parent="StartPlat/1stPlat/2ndPlat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.69834, 5.57637, -7.39924)
+
+[node name="3rdPlatform" type="StaticBody3D" parent="StartPlat/1stPlat/2ndPlat/3rdPlat"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StartPlat/1stPlat/2ndPlat/3rdPlat/3rdPlatform"]
+mesh = SubResource("BoxMesh_wtera")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StartPlat/1stPlat/2ndPlat/3rdPlat/3rdPlatform"]
 shape = SubResource("BoxShape3D_kubjn")
