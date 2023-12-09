@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=3 uid="uid://b78lkpvaip7xv"]
+
+[ext_resource type="Material" uid="uid://drptuif4iilgr" path="res://Materials/ObsMat.tres" id="1_yqj0w"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v56in"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_pmih0"]
+sky_material = SubResource("ProceduralSkyMaterial_v56in")
+
+[sub_resource type="Environment" id="Environment_n1m4m"]
+background_mode = 2
+sky = SubResource("Sky_pmih0")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_b04w6"]
+size = Vector2(6, 6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kubjn"]
+size = Vector3(6, 1, 6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qdihf"]
+material = ExtResource("1_yqj0w")
+size = Vector3(8, 6, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5wqvg"]
+size = Vector3(8, 6, 1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_n1m4m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="StartPlat" type="Node3D" parent="."]
+
+[node name="StartPlatform" type="StaticBody3D" parent="StartPlat"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StartPlat/StartPlatform"]
+mesh = SubResource("PlaneMesh_b04w6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StartPlat/StartPlatform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_kubjn")
+
+[node name="Obs1" type="Node3D" parent="StartPlat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.68977, 2, -5.03243)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="StartPlat/Obs1"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StartPlat/Obs1/StaticBody3D"]
+mesh = SubResource("BoxMesh_qdihf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StartPlat/Obs1/StaticBody3D"]
+shape = SubResource("BoxShape3D_5wqvg")
+
+[node name="1stPlat" type="Node3D" parent="StartPlat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.9557, 0, -11.2293)
+
+[node name="1stPlatform" type="StaticBody3D" parent="StartPlat/1stPlat"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StartPlat/1stPlat/1stPlatform"]
+mesh = SubResource("PlaneMesh_b04w6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StartPlat/1stPlat/1stPlatform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_kubjn")
