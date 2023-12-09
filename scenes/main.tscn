@@ -99,5 +99,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ym5vi")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_trsr2")
 
-[connection signal="button_pressed" from="Player/XROrigin3D/LeftController" to="Player" method="_button_pressed"]
-[connection signal="button_released" from="Player/XROrigin3D/LeftController" to="Player" method="_button_released"]
+[connection signal="button_pressed" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_pressed"]
+[connection signal="button_released" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_released"]
+[connection signal="button_pressed" from="Player/XROrigin3D/RightController" to="Player" method="_on_right_controller_button_pressed"]
+[connection signal="button_released" from="Player/XROrigin3D/RightController" to="Player" method="_on_right_controller_button_released"]
