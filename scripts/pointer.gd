@@ -32,7 +32,7 @@ func _ready():
 		mesh_instance.material_override = material
 		mesh_instance.global_position = Vector3.ZERO
 		
-		add_child(mesh_instance)
+		left_controller.add_child(mesh_instance)
 		sphere_meshes.append(mesh_instance)
 		t += t_incrementor
 		
@@ -87,11 +87,10 @@ func highlight_all(controller: XRController3D):
 	var sphere = select_sphere(controller)
 	highlight_one(sphere)
 
-func alter_curve(sphere: MeshInstance3D):
+func alter_curve(delta: float, sphere: MeshInstance3D):
 	var diff = $XROrigin3D/RightController.global_position - right_controller_origin
+	right_controller_origin = $XROrigin3D/RightController.global_position
 	sphere.global_position += diff
-	point_one = sphere
-	print(point_one.global_position)	
 	
 func _process(delta: float):
 	if calibration_distance != 0.0:
@@ -102,8 +101,11 @@ func _process(delta: float):
 	
 	if altering_curve:
 		if selected_sphere == null:
-			selected_sphere = select_sphere($XROrigin3D/RightController)
-		alter_curve(selected_sphere)
+			selected_sphere = select_sphere($XROrigin3D/RightController).duplicate()
+			left_controller.add_child(selected_sphere)
+			point_one = selected_sphere
+			
+		alter_curve(delta, selected_sphere)
 	
 	if point_two.visible:
 		var start = left_controller.global_position
@@ -118,6 +120,7 @@ func _on_left_controller_button_pressed(name: String):
 func _on_left_controller_button_released(name: String):
 	if name == "trigger_click":
 		point_two.visible = false
+		selected_sphere = null
 		for i in range(len(sphere_meshes)):
 			sphere_meshes[i].visible = false
 			
@@ -125,6 +128,7 @@ func _on_right_controller_button_pressed(name: String):
 	if name == "grip_click" and calibration_distance != 0.0:
 		altering_curve = true
 		right_controller_origin = $XROrigin3D/RightController.global_position
+		if selected_sphere: selected_sphere.visible = true
 	
 	if name == "ax_button" and calibration_distance == 0.0:
 		# Begin calibration
@@ -135,4 +139,4 @@ func _on_right_controller_button_pressed(name: String):
 func _on_right_controller_button_released(name: String):
 	if name == "grip_click" and calibration_distance != 0.0:
 		altering_curve = false
-		selected_sphere = null
+		selected_sphere.visible = false
