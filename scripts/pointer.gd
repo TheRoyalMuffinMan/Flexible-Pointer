@@ -2,6 +2,7 @@ extends RigidBody3D
 
 @onready var left_controller: XRController3D = $XROrigin3D/LeftController
 @onready var point_two: MeshInstance3D = $XROrigin3D/LeftController/PointTwo
+var point_one: MeshInstance3D = null
 var right_controller_origin: Vector3 = Vector3.ZERO
 var default_color: Color = Color(1, 1, 1, 1)
 var updated_color: Color = Color(0.95, 0, 0.04, 1)
@@ -9,17 +10,18 @@ var calibration_distance: float = 0.0
 var altering_curve: bool = false
 var t_incrementor: float = 0.2
 var t_start: float = 0.0
-var t_end: float = 1.0 - t_incrementor
+var t_end: float = 1.0
 var sphere_meshes: Array[MeshInstance3D] = []
 var sphere_radius: float = 0.05
 var sphere_height: float = 0.10
-var point_one: MeshInstance3D = null
-var selected_sphere: MeshInstance3D = null
+var point_one_speed: float = 2.5
+var sphere_avg_distance: float = 1.0
+var n_spheres: int = 50
+var n_points: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var t = t_start
-	while t <= t_end:
+	for i in range(n_spheres):
 		var mesh_instance = MeshInstance3D.new()
 		var sphere_mesh = SphereMesh.new()
 		var material = StandardMaterial3D.new()
@@ -34,9 +36,6 @@ func _ready():
 		
 		left_controller.add_child(mesh_instance)
 		sphere_meshes.append(mesh_instance)
-		t += t_incrementor
-		
-	point_one = sphere_meshes[len(sphere_meshes) / 2]
 
 func quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float):
 	var q0 = p0.lerp(p1, t)
@@ -44,40 +43,42 @@ func quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float):
 	var bezier_point = q0.lerp(q1, t)
 	return bezier_point
 	
-func generate_points(start, mid, end):
-	var points = Array() 
-	var t = t_start
-	while t <= t_end:
-		points.append(quadratic_bezier(start, mid, end, t))
+func generate_points(p0: Vector3, p1: Vector3, p2: Vector3):
+	var points = [p0]
+	var t = t_start + t_incrementor
+	n_points = 0 
+	while t <= t_end - t_incrementor:
+		points.append(quadratic_bezier(p0, p1, p2, t))
 		t += t_incrementor
+	n_points = len(points)
 	return points
 
 func alter_meshes(points):
-	for i in range(len(sphere_meshes)):
+	for i in range(n_points):
 		sphere_meshes[i].visible = true
 		sphere_meshes[i].global_position = points[i]
 
 func select_sphere(controller: XRController3D):
-	var ratio = calibration_distance / len(sphere_meshes)
+	var ratio = calibration_distance / n_points
 	var start = $XROrigin3D.global_position
 	var end = controller.global_position
 	var current_distance = start.distance_squared_to(end)
 	
 	var sphere = null
 	var running_dist = ratio
-	for i in range(len(sphere_meshes)):
+	for i in range(n_points):
 		if running_dist - ratio < current_distance and current_distance <= running_dist:
 			sphere = sphere_meshes[i]
 			
 		running_dist += ratio
 	
 	if sphere == null:
-		sphere = sphere_meshes[len(sphere_meshes) - 1]
+		sphere = sphere_meshes[n_points - 1]
 	
 	return sphere
 
 func highlight_one(sphere: MeshInstance3D):
-	for i in range(len(sphere_meshes)):
+	for i in range(n_points):
 		if sphere_meshes[i] == sphere:
 			sphere.material_override.albedo_color = updated_color
 		else:
@@ -90,27 +91,28 @@ func highlight_all(controller: XRController3D):
 func alter_curve(delta: float, sphere: MeshInstance3D):
 	var diff = $XROrigin3D/RightController.global_position - right_controller_origin
 	right_controller_origin = $XROrigin3D/RightController.global_position
-	sphere.global_position += diff
+	sphere.global_position += diff * point_one_speed
 	
 func _process(delta: float):
 	if calibration_distance != 0.0:
-		if selected_sphere != null:
-			highlight_one(selected_sphere)
+		if point_one != null:
+			highlight_one(point_one)
 		else:
 			highlight_all($XROrigin3D/RightController)
 	
 	if altering_curve:
-		if selected_sphere == null:
-			selected_sphere = select_sphere($XROrigin3D/RightController).duplicate()
-			left_controller.add_child(selected_sphere)
-			point_one = selected_sphere
+		if point_one == null:
+			point_one = select_sphere($XROrigin3D/RightController).duplicate()
+			left_controller.add_child(point_one)
 			
-		alter_curve(delta, selected_sphere)
+		alter_curve(delta, point_one)
 	
 	if point_two.visible:
 		var start = left_controller.global_position
-		var mid = point_one.global_position
 		var end = point_two.global_position
+		var mid = (start + end) / 2.0
+		if point_one != null:
+			mid = point_one.global_position
 		alter_meshes(generate_points(start, mid, end))
 
 func _on_left_controller_button_pressed(name: String):
@@ -120,15 +122,15 @@ func _on_left_controller_button_pressed(name: String):
 func _on_left_controller_button_released(name: String):
 	if name == "trigger_click":
 		point_two.visible = false
-		selected_sphere = null
-		for i in range(len(sphere_meshes)):
+		left_controller.remove_child(point_one)
+		point_one = null
+		for i in range(n_points):
 			sphere_meshes[i].visible = false
 			
 func _on_right_controller_button_pressed(name: String):
-	if name == "grip_click" and calibration_distance != 0.0:
+	if name == "grip_click" and calibration_distance != 0.0 and point_two.visible:
 		altering_curve = true
 		right_controller_origin = $XROrigin3D/RightController.global_position
-		if selected_sphere: selected_sphere.visible = true
 	
 	if name == "ax_button" and calibration_distance == 0.0:
 		# Begin calibration
@@ -137,6 +139,5 @@ func _on_right_controller_button_pressed(name: String):
 		calibration_distance = start.distance_squared_to(end)
 
 func _on_right_controller_button_released(name: String):
-	if name == "grip_click" and calibration_distance != 0.0:
+	if name == "grip_click" and calibration_distance != 0.0 and point_two.visible:
 		altering_curve = false
-		selected_sphere.visible = false
