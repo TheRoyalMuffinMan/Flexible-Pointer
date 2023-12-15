@@ -2,6 +2,7 @@ extends RigidBody3D
 
 @onready var left_controller: XRController3D = $XROrigin3D/LeftController
 @onready var point_two: MeshInstance3D = $XROrigin3D/LeftController/PointTwo
+var torso_offset: Vector3 = Vector3(0, -0.2, 0)
 var point_one: MeshInstance3D = null
 var right_controller_origin: Vector3 = Vector3.ZERO
 var default_color: Color = Color(1, 1, 1, 1)
@@ -9,12 +10,11 @@ var updated_color: Color = Color(0.95, 0, 0.04, 1)
 var calibration_distance: float = 0.0
 var altering_curve: bool = false
 var t_incrementor: float = 0.2
-var t_start: float = 0.0
 var t_end: float = 1.0
 var sphere_meshes: Array[MeshInstance3D] = []
 var sphere_radius: float = 0.05
 var sphere_height: float = 0.10
-var point_one_speed: float = 2.5
+var altering_speed: float = 2.5
 var sphere_avg_distance: float = 1.0
 var n_spheres: int = 50
 var n_points: int = 0
@@ -44,9 +44,9 @@ func quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float):
 	return bezier_point
 	
 func generate_points(p0: Vector3, p1: Vector3, p2: Vector3):
+	n_points = 0
 	var points = [p0]
-	var t = t_start + t_incrementor
-	n_points = 0 
+	var t = t_incrementor
 	while t <= t_end - t_incrementor:
 		points.append(quadratic_bezier(p0, p1, p2, t))
 		t += t_incrementor
@@ -60,22 +60,13 @@ func alter_meshes(points):
 
 func select_sphere(controller: XRController3D):
 	var ratio = calibration_distance / n_points
-	var start = $XROrigin3D.global_position
+	var start = $XROrigin3D/XRCamera3D.global_position + torso_offset
 	var end = controller.global_position
 	var current_distance = start.distance_squared_to(end)
-	
-	var sphere = null
-	var running_dist = ratio
-	for i in range(n_points):
-		if running_dist - ratio < current_distance and current_distance <= running_dist:
-			sphere = sphere_meshes[i]
-			
-		running_dist += ratio
-	
-	if sphere == null:
-		sphere = sphere_meshes[n_points - 1]
-	
-	return sphere
+	var percentage = current_distance / calibration_distance
+	var computed_index = round(percentage * (n_points - 1)) + 1
+	var index = clamp(computed_index, 1, n_points - 1)
+	return sphere_meshes[index]
 
 func highlight_one(sphere: MeshInstance3D):
 	for i in range(n_points):
@@ -91,23 +82,23 @@ func highlight_all(controller: XRController3D):
 func alter_curve(delta: float, sphere: MeshInstance3D):
 	var diff = $XROrigin3D/RightController.global_position - right_controller_origin
 	right_controller_origin = $XROrigin3D/RightController.global_position
-	sphere.global_position += diff * point_one_speed
+	sphere.global_position += diff * altering_speed
 	
 func _process(delta: float):
-	if calibration_distance != 0.0:
-		if point_one != null:
-			highlight_one(point_one)
-		else:
-			highlight_all($XROrigin3D/RightController)
-	
-	if altering_curve:
-		if point_one == null:
-			point_one = select_sphere($XROrigin3D/RightController).duplicate()
-			left_controller.add_child(point_one)
-			
-		alter_curve(delta, point_one)
-	
 	if point_two.visible:
+		if calibration_distance != 0.0:
+			if point_one != null:
+				highlight_one(point_one)
+			else:
+				highlight_all($XROrigin3D/RightController)
+		
+		if altering_curve:
+			if point_one == null:
+				point_one = select_sphere($XROrigin3D/RightController).duplicate()
+				left_controller.add_child(point_one)
+				
+			alter_curve(delta, point_one)
+			
 		var start = left_controller.global_position
 		var end = point_two.global_position
 		var mid = (start + end) / 2.0
@@ -134,7 +125,7 @@ func _on_right_controller_button_pressed(name: String):
 	
 	if name == "ax_button" and calibration_distance == 0.0:
 		# Begin calibration
-		var start = $XROrigin3D.global_position
+		var start = $XROrigin3D/XRCamera3D.global_position
 		var end = $XROrigin3D/RightController.global_position
 		calibration_distance = start.distance_squared_to(end)
 
