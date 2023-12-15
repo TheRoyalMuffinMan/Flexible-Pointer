@@ -27,6 +27,9 @@ radius = 0.05
 height = 0.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vjshw"]
+transparency = 1
+blend_mode = 1
+albedo_color = Color(0, 0.345098, 1, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_osj4q"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)

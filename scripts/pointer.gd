@@ -2,7 +2,7 @@ extends RigidBody3D
 
 # Constants
 const TORSO_OFFSET: Vector3 = Vector3(0, -0.2, 0)
-const DEFAULT_COLOR: Color = Color(1, 1, 1, 1)
+const DEFAULT_COLOR: Color = Color(0, 0.35, 1, 1)
 const UPDATED_COLOR: Color = Color(0.95, 0, 0.04, 1)
 const BUTTON_GREEN: Color = Color(0.22, 0.55, 0, 1)
 const SPHERE_RADIUS: float = 0.05
@@ -41,6 +41,9 @@ func _ready():
 		var material: StandardMaterial3D = StandardMaterial3D.new()
 		
 		material.albedo_color = self.DEFAULT_COLOR
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		
 		sphere_mesh.radius = self.SPHERE_RADIUS
 		sphere_mesh.height = self.SPHERE_HEIGHT
 		mesh_instance.visible = false
@@ -136,8 +139,8 @@ func alter_length(controller: XRController3D, delta: float) -> void:
 	var current_distance: float = start.distance_to(end)
 	var percentage: float = current_distance / self.left_calib_dist
 	
-	# If in the "grey area" (0.40 < p < 0.60), don't expand or retract
-	if percentage < 0.60 and percentage > 0.40:
+	# If in the "grey area" (0.30 < p < 0.70), don't expand or retract
+	if percentage < 0.70 and percentage > 0.30:
 		return
 	
 	if self.original_point_two == self.point_two:
