@@ -4,6 +4,7 @@ extends RigidBody3D
 const TORSO_OFFSET: Vector3 = Vector3(0, -0.2, 0)
 const DEFAULT_COLOR: Color = Color(1, 1, 1, 1)
 const UPDATED_COLOR: Color = Color(0.95, 0, 0.04, 1)
+const BUTTON_GREEN: Color = Color(0.22, 0.55, 0, 1)
 const SPHERE_RADIUS: float = 0.05
 const SPHERE_HEIGHT: float = 0.10
 const ALTERING_SPEED: float = 2.5
@@ -19,6 +20,8 @@ const T_END: float = 1.0
 @onready var point_zero: XRController3D = $XROrigin3D/LeftController
 @onready var point_two: MeshInstance3D = $XROrigin3D/LeftController/PointTwo
 @onready var original_point_two: MeshInstance3D = $XROrigin3D/LeftController/PointTwo
+@onready var left_button: Button = get_node("../SubViewport/CanvasLayer/Content/LeftButton")
+@onready var right_button: Button = get_node("../SubViewport/CanvasLayer/Content/RightButton")
 
 # Instance Declarations
 var n_points: int = 0
@@ -180,6 +183,11 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 
 # Executed once per frame (core logic)
 func _process(delta: float) -> void:
+	
+	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
+	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:
+		self.camera.remove_child(menu)
+	
 	# Need to hold the trigger and finish calibration to use pointer
 	if not self.show_pointer or self.left_calib_dist == 0.0 or self.right_calib_dist == 0.0:
 		return
@@ -209,6 +217,7 @@ func _on_left_controller_button_pressed(name: String) -> void:
 	
 	# Left Calibration
 	if name == "ax_button" and self.left_calib_dist == 0.0:
+		self.left_button.get_theme_stylebox("normal").bg_color = self.BUTTON_GREEN
 		var start: Vector3 = self.camera.global_position + self.TORSO_OFFSET
 		var end: Vector3 = self.left_controller.global_position
 		self.left_calib_dist = start.distance_to(end)
@@ -240,10 +249,12 @@ func _on_right_controller_button_pressed(name: String) -> void:
 	
 	# Right calibration
 	if name == "ax_button" and self.right_calib_dist == 0.0:
+		self.right_button.get_theme_stylebox("normal").bg_color = self.BUTTON_GREEN
 		var start: Vector3 = self.camera.global_position + self.TORSO_OFFSET
 		var end: Vector3 = self.right_controller.global_position
 		self.right_calib_dist = start.distance_to(end)
 
 func _on_right_controller_button_released(name: String) -> void:
+	# Point release after calibration
 	if name == "grip_click" and self.right_calib_dist != 0.0 and self.point_two.visible:
 		self.altering_curve = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d46wrkgdeynk"]
+[gd_scene load_steps=21 format=3 uid="uid://d46wrkgdeynk"]
 
 [ext_resource type="Script" path="res://scripts/initialize.gd" id="1_xecma"]
 [ext_resource type="Script" path="res://scripts/pointer.gd" id="2_48hac"]
@@ -8,6 +8,19 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1epba"]
 size = Vector3(0.5, 1.5, 0.5)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_oee3t"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0f6b3"]
+resource_local_to_scene = true
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_oee3t")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_nkdgo"]
+size = Vector2(1.25, 0.75)
 
 [sub_resource type="SphereMesh" id="SphereMesh_oythw"]
 radius = 0.05
@@ -42,6 +55,27 @@ texture_filter = 5
 [sub_resource type="BoxShape3D" id="BoxShape3D_trsr2"]
 size = Vector3(100, 1, 100)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3jtm2"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kqh1o"]
+bg_color = Color(0.223529, 0.545098, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ljauc"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_xecma")
 
@@ -57,6 +91,12 @@ shape = SubResource("BoxShape3D_1epba")
 [node name="XRCamera3D" type="XRCamera3D" parent="Player/XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 far = 500.0
+
+[node name="SpatialMenu" type="MeshInstance3D" parent="Player/XROrigin3D/XRCamera3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -1.76064)
+material_override = SubResource("StandardMaterial3D_0f6b3")
+mesh = SubResource("PlaneMesh_nkdgo")
+skeleton = NodePath("../../../..")
 
 [node name="LeftController" type="XRController3D" parent="Player/XROrigin3D"]
 unique_name_in_owner = true
@@ -97,6 +137,75 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ym5vi")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_trsr2")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(512, 350)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="SubViewport"]
+
+[node name="Content" type="RichTextLabel" parent="SubViewport/CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -204.0
+offset_top = -101.0
+offset_right = 184.0
+offset_bottom = 145.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "
+
+Calibrate the left and right arm by extending your left or right arm and pressing "
+
+[node name="Title" type="RichTextLabel" parent="SubViewport/CanvasLayer/Content"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -45.0
+offset_right = 45.0
+offset_bottom = 28.0
+grow_horizontal = 2
+text = "Calibration"
+
+[node name="RightButton" type="Button" parent="SubViewport/CanvasLayer/Content"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -41.0
+offset_top = -41.0
+offset_right = -7.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_3jtm2")
+text = "A"
+
+[node name="Button" type="Button" parent="SubViewport/CanvasLayer/Content"]
+offset_left = 231.0
+offset_top = 69.0
+offset_right = 265.0
+offset_bottom = 100.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_kqh1o")
+text = "A"
+
+[node name="LeftButton" type="Button" parent="SubViewport/CanvasLayer/Content"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = -41.0
+offset_right = 37.0
+offset_bottom = -10.0
+grow_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_ljauc")
+text = "A"
 
 [connection signal="button_pressed" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_pressed"]
 [connection signal="button_released" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_released"]
