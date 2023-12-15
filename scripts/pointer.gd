@@ -55,8 +55,26 @@ func quadratic_bezier(p0: Vector3, p1: Vector3, p2: Vector3, t: float) -> Vector
 	var bezier_point: Vector3 = q0.lerp(q1, t)
 	return bezier_point
 
+# Computes average distance between all the points that would be generated
+# Runtime: O(T_END / incrementor)
+func average_distance(p0: Vector3, p1: Vector3, p2: Vector3, incrementor: float) -> float:
+	var prev_point: Vector3 = p0
+	var distance: float = 0.0
+	var t: float = incrementor
+	var total_points: int = 1
+	
+	while t <= self.T_END - incrementor:
+		var new_point: Vector3 = quadratic_bezier(p0, p1, p2, t)
+		distance += prev_point.distance_to(new_point)
+		prev_point = new_point
+		total_points += 1
+		t += incrementor
+		
+	return distance / total_points
+
 # This performs a binary search between the range (0.0, 1.0) to find a 
 # incrementor that will produce points within a given distance (maximized).
+# Total Runtime: O(log(-ε) * O(T_END / mid))
 func approximate_incrementor(p0: Vector3, p1: Vector3, p2: Vector3, max_distance: float) -> float:
 	var low: float = 0.0
 	var high: float = 1.0
@@ -65,8 +83,10 @@ func approximate_incrementor(p0: Vector3, p1: Vector3, p2: Vector3, max_distance
 	# Stop interation once the difference becomes less than epsilon
 	while (high - low) > epsilon:
 		var mid: float = (low + high) / 2.0
-		var bezier_point: Vector3 = quadratic_bezier(p0, p1, p2, mid)
-		var distance: float = p0.distance_to(bezier_point)
+		var distance: float = average_distance(p0, p1, p2, mid)
+		# Old way to approximate average
+		# var bezier_point: Vector3 = quadratic_bezier(p0, p1, p2, mid)
+		# var distance: float = p0.distance_to(bezier_point)
 		
 		if distance < max_distance:
 			low = mid
@@ -113,8 +133,8 @@ func alter_length(controller: XRController3D, delta: float) -> void:
 	var current_distance: float = start.distance_to(end)
 	var percentage: float = current_distance / self.left_calib_dist
 	
-	# If in the "grey area" (0.30 < p < 0.70), don't expand or retract
-	if percentage < 0.70 and percentage > 0.30:
+	# If in the "grey area" (0.40 < p < 0.60), don't expand or retract
+	if percentage < 0.60 and percentage > 0.40:
 		return
 	
 	if self.original_point_two == self.point_two:
