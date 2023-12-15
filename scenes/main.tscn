@@ -69,7 +69,6 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 
 [node name="PointTwo" type="MeshInstance3D" parent="Player/XROrigin3D/LeftController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.57851)
-visible = false
 mesh = SubResource("SphereMesh_oythw")
 surface_material_override/0 = SubResource("StandardMaterial3D_vjshw")
 
