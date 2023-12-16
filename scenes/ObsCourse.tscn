@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b78lkpvaip7xv"]
+[gd_scene load_steps=16 format=3 uid="uid://dyuo6q5ipd2mv"]
 
 [ext_resource type="Material" uid="uid://drptuif4iilgr" path="res://Materials/ObsMat.tres" id="1_yqj0w"]
 
@@ -139,11 +139,11 @@ mesh = SubResource("BoxMesh_3osni")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/StaticBody3D"]
 shape = SubResource("BoxShape3D_wnnor")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="TestThing" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60.4397, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestThing"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestThing"]
 mesh = SubResource("CylinderMesh_arojs")
 skeleton = NodePath("../..")
