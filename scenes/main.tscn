@@ -1,10 +1,10 @@
-[gd_scene load_steps=26 format=3 uid="uid://d46wrkgdeynk"]
+[gd_scene load_steps=23 format=3 uid="uid://d46wrkgdeynk"]
 
 [ext_resource type="Script" path="res://scripts/initialize.gd" id="1_xecma"]
 [ext_resource type="Script" path="res://scripts/pointer.gd" id="2_48hac"]
 [ext_resource type="PackedScene" uid="uid://dw2kfbg15qqeu" path="res://controllers/controller_l.fbx" id="3_y2kpf"]
 [ext_resource type="PackedScene" uid="uid://doel0ns5nc6bm" path="res://controllers/controller_r.fbx" id="4_5ti0a"]
-[ext_resource type="Texture2D" uid="uid://cgapaa2jfxlp2" path="res://textures/holodeck.png" id="4_vbrye"]
+[ext_resource type="PackedScene" uid="uid://csmmoroyqwksp" path="res://scenes/ObsCourse.tscn" id="5_0m75l"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1epba"]
 size = Vector3(0.5, 1.5, 0.5)
@@ -54,19 +54,6 @@ sky = SubResource("Sky_noqmy")
 tonemap_mode = 2
 fog_density = 0.001
 fog_sky_affect = 0.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_a8whk"]
-size = Vector2(100, 100)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ym5vi"]
-shading_mode = 2
-albedo_color = Color(0.882353, 0.882353, 0.882353, 1)
-albedo_texture = ExtResource("4_vbrye")
-uv1_scale = Vector3(100, 100, 1)
-texture_filter = 5
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_trsr2"]
-size = Vector3(100, 1, 100)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3jtm2"]
 bg_color = Color(1, 0, 0, 1)
@@ -157,16 +144,6 @@ environment = SubResource("Environment_pi0m0")
 transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Ground" type="StaticBody3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("PlaneMesh_a8whk")
-surface_material_override/0 = SubResource("StandardMaterial3D_ym5vi")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-shape = SubResource("BoxShape3D_trsr2")
-
 [node name="CalibrationScreen" type="SubViewport" parent="."]
 size = Vector2i(512, 350)
 
@@ -247,7 +224,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.14126, 0)
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_wxyh4")
 
+[node name="Node3D" parent="." instance=ExtResource("5_0m75l")]
+
 [connection signal="button_pressed" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_pressed"]
 [connection signal="button_released" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_released"]
 [connection signal="button_pressed" from="Player/XROrigin3D/RightController" to="Player" method="_on_right_controller_button_pressed"]
 [connection signal="button_released" from="Player/XROrigin3D/RightController" to="Player" method="_on_right_controller_button_released"]
+[connection signal="onTop" from="Node3D" to="Player" method="_on_node_3d_on_top"]
+[connection signal="tutorialDone" from="Node3D" to="Player" method="_on_node_3d_tutorial_done"]

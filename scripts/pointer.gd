@@ -12,6 +12,8 @@ const DISTANCE_BETWEEN: float = 1
 const MAX_POINTS: float = 50
 const MIN_INDEX: int = 1
 const T_END: float = 1.0
+const CAM_HEIGHT: float = 20
+const MARKER_HEIGHT: float = 4
 
 # On Ready Declarations
 @onready var camera: XRCamera3D = $XROrigin3D/XRCamera3D
@@ -24,6 +26,7 @@ const T_END: float = 1.0
 @onready var right_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/RightButton")
 @onready var map_camera: Camera3D = get_node("../MapCamera/Camera3D")
 @onready var player_marker: MeshInstance3D = get_node("../PlayerMarker")
+@onready var start_pos: Vector3 = self.global_position
 
 # Instance Declarations
 var n_points: int = 0
@@ -188,11 +191,16 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 
 # Executed once per frame (core logic)
 func _process(delta: float) -> void:
+	if self.global_position.y < -10:
+		self.global_position = start_pos
+	
 	map_camera.global_position.x = self.global_position.x
 	map_camera.global_position.z = self.global_position.z
+	map_camera.global_position.y = self.global_position.y + CAM_HEIGHT
 	
 	player_marker.global_position.x = self.global_position.x
 	player_marker.global_position.z = self.global_position.z
+	player_marker.global_position.y = self.global_position.y + MARKER_HEIGHT
 	
 	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
 	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:
@@ -269,3 +277,14 @@ func _on_right_controller_button_released(name: String) -> void:
 	# Point release after calibration
 	if name == "grip_click" and self.right_calib_dist != 0.0 and self.point_two.visible:
 		self.altering_curve = false
+
+
+
+
+func _on_node_3d_tutorial_done(new_pos):
+	start_pos = new_pos
+	#TODO: Adjust number teloports 
+
+
+func _on_node_3d_on_top():
+	self.global_position.y = self.global_position.y - 4
