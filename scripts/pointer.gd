@@ -20,8 +20,9 @@ const T_END: float = 1.0
 @onready var point_zero: XRController3D = $XROrigin3D/LeftController
 @onready var point_two: MeshInstance3D = $XROrigin3D/LeftController/PointTwo
 @onready var original_point_two: MeshInstance3D = $XROrigin3D/LeftController/PointTwo
-@onready var left_button: Button = get_node("../SubViewport/CanvasLayer/Content/LeftButton")
-@onready var right_button: Button = get_node("../SubViewport/CanvasLayer/Content/RightButton")
+@onready var left_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/LeftButton")
+@onready var right_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/RightButton")
+@onready var map_camera: Camera3D = get_node("../MapCamera/Camera3D")
 
 # Instance Declarations
 var n_points: int = 0
@@ -186,6 +187,8 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 
 # Executed once per frame (core logic)
 func _process(delta: float) -> void:
+	map_camera.global_position.x = self.global_position.x
+	map_camera.global_position.z = self.global_position.z
 	
 	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
 	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:
@@ -215,7 +218,7 @@ func _process(delta: float) -> void:
 	alter_length(self.left_controller, delta)
 
 func _on_left_controller_button_pressed(name: String) -> void:
-	if name == "trigger_click":
+	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
 		self.show_pointer = true
 	
 	# Left Calibration
@@ -227,7 +230,8 @@ func _on_left_controller_button_pressed(name: String) -> void:
 
 func _on_left_controller_button_released(name: String) -> void:
 	# Trigger cleanup
-	if name == "trigger_click":
+	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
+		self.global_position = self.point_two.global_position
 		
 		# Delete the duplicated point_two if it doesn't equal
 		# the original point_two
