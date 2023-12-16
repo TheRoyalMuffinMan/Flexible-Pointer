@@ -8,7 +8,7 @@ const BUTTON_GREEN: Color = Color(0.22, 0.55, 0, 1)
 const SPHERE_RADIUS: float = 0.05
 const SPHERE_HEIGHT: float = 0.10
 const ALTERING_SPEED: float = 2.5
-const DISTANCE_BETWEEN: float = 0.30
+const DISTANCE_BETWEEN: float = 1
 const MAX_POINTS: float = 50
 const MIN_INDEX: int = 1
 const T_END: float = 1.0
@@ -23,6 +23,7 @@ const T_END: float = 1.0
 @onready var left_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/LeftButton")
 @onready var right_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/RightButton")
 @onready var map_camera: Camera3D = get_node("../MapCamera/Camera3D")
+@onready var player_marker: MeshInstance3D = get_node("../PlayerMarker")
 
 # Instance Declarations
 var n_points: int = 0
@@ -189,6 +190,9 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 func _process(delta: float) -> void:
 	map_camera.global_position.x = self.global_position.x
 	map_camera.global_position.z = self.global_position.z
+	
+	player_marker.global_position.x = self.global_position.x
+	player_marker.global_position.z = self.global_position.z
 	
 	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
 	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:

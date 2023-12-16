@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://d46wrkgdeynk"]
+[gd_scene load_steps=26 format=3 uid="uid://d46wrkgdeynk"]
 
 [ext_resource type="Script" path="res://scripts/initialize.gd" id="1_xecma"]
 [ext_resource type="Script" path="res://scripts/pointer.gd" id="2_48hac"]
@@ -88,6 +88,15 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82bq1"]
+shading_mode = 0
+albedo_color = Color(0.309804, 0.803922, 0.254902, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wxyh4"]
+material = SubResource("StandardMaterial3D_82bq1")
+top_radius = 0.0
+cap_bottom = false
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_xecma")
@@ -207,6 +216,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_3jtm2")
 text = "A"
 
 [node name="Button" type="Button" parent="CalibrationScreen/CanvasLayer/Content"]
+layout_mode = 0
 offset_left = 231.0
 offset_top = 69.0
 offset_right = 265.0
@@ -231,6 +241,11 @@ text = "A"
 
 [node name="Camera3D" type="Camera3D" parent="MapCamera"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12.3156, 0)
+
+[node name="PlayerMarker" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.14126, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_wxyh4")
 
 [connection signal="button_pressed" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_pressed"]
 [connection signal="button_released" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_released"]
