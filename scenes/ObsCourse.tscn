@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://csmmoroyqwksp"]
+[gd_scene load_steps=52 format=3 uid="uid://csmmoroyqwksp"]
 
 [ext_resource type="Script" path="res://scenes/ObsCourseConnect.gd" id="1_s56tw"]
 [ext_resource type="Material" uid="uid://drptuif4iilgr" path="res://Materials/ObsMat.tres" id="1_yqj0w"]
@@ -116,6 +116,62 @@ size = Vector3(5, 8, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_87jyc"]
 size = Vector3(5, 8, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nthmj"]
+size = Vector3(30, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oyv0i"]
+material = ExtResource("3_h3fql")
+size = Vector3(30, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uekji"]
+material = ExtResource("3_h3fql")
+size = Vector3(25, 7, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ru37v"]
+size = Vector3(25, 7, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2yrks"]
+material = ExtResource("3_h3fql")
+size = Vector3(3, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vp5gm"]
+size = Vector3(3, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sajjh"]
+material = ExtResource("3_h3fql")
+size = Vector3(20, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7lqu3"]
+size = Vector3(20, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vgiug"]
+size = Vector3(30, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r02an"]
+material = ExtResource("3_h3fql")
+size = Vector3(30, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4yvof"]
+material = ExtResource("3_h3fql")
+size = Vector3(25, 6, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hvysq"]
+size = Vector3(25, 6, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sbv48"]
+material = ExtResource("3_h3fql")
+size = Vector3(4, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oko1p"]
+size = Vector3(4, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3m652"]
+material = ExtResource("3_h3fql")
+size = Vector3(20, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ni0gy"]
+size = Vector3(20, 2, 1)
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_s56tw")
@@ -313,13 +369,91 @@ mesh = SubResource("PrismMesh_mqbr8")
 shape = SubResource("ConvexPolygonShape3D_rles6")
 
 [node name="JumpWall" type="StaticBody3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.052, -1, 23.248)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.052, -3, 23.248)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/JumpWall"]
 mesh = SubResource("BoxMesh_lkgva")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/JumpWall"]
 shape = SubResource("BoxShape3D_87jyc")
+
+[node name="Hole1" type="Node3D" parent="Maze/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17)
+
+[node name="LowWall1" type="StaticBody3D" parent="Maze/Walls/Hole1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.893, -4.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole1/LowWall1"]
+shape = SubResource("BoxShape3D_nthmj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole1/LowWall1"]
+mesh = SubResource("BoxMesh_oyv0i")
+
+[node name="HighWall1" type="StaticBody3D" parent="Maze/Walls/Hole1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.467, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole1/HighWall1"]
+mesh = SubResource("BoxMesh_uekji")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole1/HighWall1"]
+shape = SubResource("BoxShape3D_ru37v")
+
+[node name="SideWall1" type="StaticBody3D" parent="Maze/Walls/Hole1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.43586, -3, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole1/SideWall1"]
+mesh = SubResource("BoxMesh_2yrks")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole1/SideWall1"]
+shape = SubResource("BoxShape3D_vp5gm")
+
+[node name="SideWall2" type="StaticBody3D" parent="Maze/Walls/Hole1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.47122, -3, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole1/SideWall2"]
+mesh = SubResource("BoxMesh_sajjh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole1/SideWall2"]
+shape = SubResource("BoxShape3D_7lqu3")
+
+[node name="Hole2" type="Node3D" parent="Maze/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
+
+[node name="LowWall2" type="StaticBody3D" parent="Maze/Walls/Hole2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.893, -4, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole2/LowWall2"]
+shape = SubResource("BoxShape3D_vgiug")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole2/LowWall2"]
+mesh = SubResource("BoxMesh_r02an")
+
+[node name="HighWall2" type="StaticBody3D" parent="Maze/Walls/Hole2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.467, 2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole2/HighWall2"]
+mesh = SubResource("BoxMesh_4yvof")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole2/HighWall2"]
+shape = SubResource("BoxShape3D_hvysq")
+
+[node name="SideWall1" type="StaticBody3D" parent="Maze/Walls/Hole2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.09593, -2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole2/SideWall1"]
+mesh = SubResource("BoxMesh_sbv48")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole2/SideWall1"]
+shape = SubResource("BoxShape3D_oko1p")
+
+[node name="SideWall2" type="StaticBody3D" parent="Maze/Walls/Hole2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.82556, -2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Hole2/SideWall2"]
+mesh = SubResource("BoxMesh_3m652")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/Hole2/SideWall2"]
+shape = SubResource("BoxShape3D_ni0gy")
 
 [connection signal="body_entered" from="thirdPlat/Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_entered" from="Maze/MazeRoof/TopWarning" to="." method="_on_top_warning_body_entered"]
