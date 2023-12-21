@@ -1,6 +1,6 @@
 extends Node3D
 
-var time = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -8,6 +8,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	time = time + delta
-	$Pliller.position.z = -7.5*cos(time*deg_to_rad(60))
-	
+	# Spin the node so that the barrier spins in a circle
+	rotate_y(deg_to_rad(50*delta))
+

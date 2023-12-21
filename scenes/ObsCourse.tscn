@@ -1,15 +1,15 @@
 [gd_scene load_steps=79 format=3 uid="uid://csmmoroyqwksp"]
 
-[ext_resource type="Script" path="res://scenes/ObsCourseConnect.gd" id="1_s56tw"]
+[ext_resource type="Script" path="res://scripts/ObsCourseConnect.gd" id="1_bmhms"]
 [ext_resource type="Material" uid="uid://drptuif4iilgr" path="res://Materials/ObsMat.tres" id="1_yqj0w"]
-[ext_resource type="AudioStream" uid="uid://bgwibar1fbl0m" path="res://Materials/medieval-fanfare-6826.mp3" id="2_44ysf"]
+[ext_resource type="AudioStream" uid="uid://bgwibar1fbl0m" path="res://Sounds/medieval-fanfare-6826.mp3" id="2_g57go"]
 [ext_resource type="Material" uid="uid://chnod3xvcmhst" path="res://Materials/MazeWall.tres" id="3_h3fql"]
 [ext_resource type="Material" uid="uid://cobquhubkg2cp" path="res://Materials/MazeMat.tres" id="3_tkn14"]
-[ext_resource type="Script" path="res://scenes/Spin1.gd" id="4_hoaxb"]
-[ext_resource type="Script" path="res://scenes/Mover1.gd" id="5_2skq0"]
-[ext_resource type="Script" path="res://scenes/Spin2.gd" id="5_14wx3"]
-[ext_resource type="Script" path="res://scenes/UpDown1.gd" id="7_ettb6"]
-[ext_resource type="Script" path="res://scenes/UpDown2.gd" id="8_ddkcw"]
+[ext_resource type="Script" path="res://scripts/Spin1.gd" id="6_pk7a4"]
+[ext_resource type="Script" path="res://scripts/Spin2.gd" id="7_0gqkf"]
+[ext_resource type="Script" path="res://scripts/Mover1.gd" id="8_1rcan"]
+[ext_resource type="Script" path="res://scripts/UpDown1.gd" id="9_dcovh"]
+[ext_resource type="Script" path="res://scripts/UpDown2.gd" id="10_ypga0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v56in"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -254,13 +254,13 @@ size = Vector2(25, 8)
 size = Vector3(25, 1, 8)
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource("1_s56tw")
+script = ExtResource("1_bmhms")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_n1m4m")
 
 [node name="FinishSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_44ysf")
+stream = ExtResource("2_g57go")
 volume_db = 2.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -592,7 +592,7 @@ shape = SubResource("ConvexPolygonShape3D_x08ui")
 
 [node name="Spin1" type="Node3D" parent="Maze/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.53967, 0, -24.812)
-script = ExtResource("4_hoaxb")
+script = ExtResource("6_pk7a4")
 
 [node name="Pliller" type="StaticBody3D" parent="Maze/Walls/Spin1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.45858, 0, 0)
@@ -614,7 +614,7 @@ shape = SubResource("CylinderShape3D_8iw7y")
 
 [node name="Spin2" type="Node3D" parent="Maze/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.53967, 0, -24.812)
-script = ExtResource("5_14wx3")
+script = ExtResource("7_0gqkf")
 
 [node name="Pliller" type="StaticBody3D" parent="Maze/Walls/Spin2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.77036, 0, 0)
@@ -636,7 +636,7 @@ shape = SubResource("CylinderShape3D_8iw7y")
 
 [node name="Mover1" type="Node3D" parent="Maze/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.92141, 0, -23.9692)
-script = ExtResource("5_2skq0")
+script = ExtResource("8_1rcan")
 
 [node name="WithPath" type="StaticBody3D" parent="Maze/Walls/Mover1"]
 
@@ -674,7 +674,7 @@ shape = SubResource("CylinderShape3D_6en30")
 
 [node name="UpDown1" type="Node3D" parent="Maze/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.52862, 0, -24.8878)
-script = ExtResource("7_ettb6")
+script = ExtResource("9_dcovh")
 
 [node name="Pliller" type="StaticBody3D" parent="Maze/Walls/UpDown1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.493255, 0, 0)
@@ -687,7 +687,7 @@ shape = SubResource("CylinderShape3D_gaptg")
 
 [node name="UpDown2" type="Node3D" parent="Maze/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.91836, 0, -24.8878)
-script = ExtResource("8_ddkcw")
+script = ExtResource("10_ypga0")
 
 [node name="Pliller" type="StaticBody3D" parent="Maze/Walls/UpDown2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.493255, 0, 0)

@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dw2kfbg15qqeu" path="res://controllers/controller_l.fbx" id="3_y2kpf"]
 [ext_resource type="PackedScene" uid="uid://doel0ns5nc6bm" path="res://controllers/controller_r.fbx" id="4_5ti0a"]
 [ext_resource type="PackedScene" uid="uid://csmmoroyqwksp" path="res://scenes/ObsCourse.tscn" id="5_0m75l"]
-[ext_resource type="AudioStream" uid="uid://ciyihbm82kp77" path="res://Materials/error-sound-39539.mp3" id="5_4kioc"]
+[ext_resource type="AudioStream" uid="uid://ciyihbm82kp77" path="res://Sounds/error-sound-39539.mp3" id="5_4t6jh"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1epba"]
 size = Vector3(0.5, 1.5, 0.5)
@@ -168,7 +168,7 @@ pose = &"aim"
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0.05)
 
 [node name="TeleportError" type="AudioStreamPlayer" parent="Player"]
-stream = ExtResource("5_4kioc")
+stream = ExtResource("5_4t6jh")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_pi0m0")
