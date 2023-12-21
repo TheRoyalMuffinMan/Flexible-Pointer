@@ -7,12 +7,12 @@ const UPDATED_COLOR: Color = Color(0.95, 0, 0.04, 1)
 const BUTTON_GREEN: Color = Color(0.22, 0.55, 0, 1)
 const SPHERE_RADIUS: float = 0.05
 const SPHERE_HEIGHT: float = 0.10
-const ALTERING_SPEED: float = 2.5
+const ALTERING_SPEED: float = 4
 const DISTANCE_BETWEEN: float = 1
 const MAX_POINTS: float = 50
 const MIN_INDEX: int = 1
 const T_END: float = 1.0
-const CAM_HEIGHT: float = 20
+const CAM_HEIGHT: float = 40
 const MARKER_HEIGHT: float = 4
 
 # On Ready Declarations

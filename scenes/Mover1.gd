@@ -14,3 +14,6 @@ func _process(delta):
 	
 	$AgainstPath.position.x = 7.5*cos(time*deg_to_rad(60))
 	$AgainstPath.position.z = 7.5*sin(time*deg_to_rad(60))
+	
+	$SideSide1.position.x = 4*cos(time*deg_to_rad(80))
+	$SideSide2.position.x = -4*cos(time*deg_to_rad(80))
