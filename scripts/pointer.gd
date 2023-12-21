@@ -255,13 +255,21 @@ func _on_left_controller_button_pressed(name: String) -> void:
 		var end: Vector3 = self.left_controller.global_position
 		self.left_calib_dist = start.distance_to(end)
 
+func check_for_static_bodies(area3D: Node3D) -> bool:
+	for node in area3D.get_overlapping_bodies():
+		if node.is_class("StaticBody3D"):
+			return true
+			
+	return false
+
 func _on_left_controller_button_released(name: String) -> void:
 	# Trigger cleanup
 	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
-		var is_overlapping: bool = point_two.get_child(0).has_overlapping_bodies()
+		var is_overlapping: bool = check_for_static_bodies(point_two.get_child(0))
 		for i in range(self.n_points):
 			var area3D: Area3D = self.sphere_meshes[i].get_child(0)
-			is_overlapping = area3D.has_overlapping_bodies()
+			if check_for_static_bodies(area3D):
+				is_overlapping = true
 		
 		if not is_overlapping:
 			self.global_position = self.point_two.global_position
