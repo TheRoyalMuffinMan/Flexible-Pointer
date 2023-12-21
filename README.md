@@ -36,6 +36,9 @@ Our obstacle is specifically geared to be completed optimally with the flexible 
 
 - `alter_curve`: This just allows the user to mimic the location of *point_one*, or the point that is altering the curve based on the position of the right controller.
 
+- `generate_points`: This function uses the approximate incrementor to generate a list of points along the curve by stepping through the incrementer
+
+- `alter_meshes`: Moves the required number of points from where they are stored at the origin of the world, and makes them visable to form the curve.
 ## Attributions
 [1]A. Olwal and S. Feiner, “The Flexible Pointer: An Interaction Technique for Selection in Augmented and Virtual Reality,” in ACM Symposium on User Interface Software and Technology, 2003. Accessed: Dec. 21, 2023. [Online]. Available: https://uist.acm.org/archive/adjunct/2003/pdf/posters/p17-olwal.pdf
 
