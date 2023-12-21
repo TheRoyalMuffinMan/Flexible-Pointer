@@ -57,10 +57,10 @@ albedo_color = Color(0.376471, 0, 1, 0.054902)
 
 [sub_resource type="BoxMesh" id="BoxMesh_3osni"]
 material = SubResource("StandardMaterial3D_30o4f")
-size = Vector3(45, 1, 90)
+size = Vector3(45, 5, 90)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wnnor"]
-size = Vector3(45, 1, 90)
+size = Vector3(45, 5, 90)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d7fjh"]
 transparency = 1
@@ -337,7 +337,7 @@ mesh = SubResource("BoxMesh_wtera")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="thirdPlat/thirdPlatform"]
 shape = SubResource("BoxShape3D_kubjn")
 
-[node name="TutorialComplete" type="Area3D" parent="thirdPlat"]
+[node name="TutorialComplete" type="Area3D" parent="thirdPlat" groups=["TeloportIgnore"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="thirdPlat/TutorialComplete"]
@@ -347,6 +347,7 @@ shape = SubResource("BoxShape3D_b6t7e")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.69387, 5.5, -80)
 
 [node name="MazeBase" type="StaticBody3D" parent="Maze"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/MazeBase"]
 mesh = SubResource("BoxMesh_3osni")
@@ -680,10 +681,10 @@ mesh = SubResource("CylinderMesh_ciiar")
 shape = SubResource("CylinderShape3D_gaptg")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05125, -4.99, -41.0342)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05125, -4.75144, -41.0342)
 mesh = SubResource("PlaneMesh_6shs6")
 
-[node name="CourseDone" type="Area3D" parent="Maze/Walls/MeshInstance3D"]
+[node name="CourseDone" type="Area3D" parent="Maze/Walls/MeshInstance3D" groups=["TeloportIgnore"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/MeshInstance3D/CourseDone"]
