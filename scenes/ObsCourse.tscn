@@ -337,7 +337,7 @@ mesh = SubResource("BoxMesh_wtera")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="thirdPlat/thirdPlatform"]
 shape = SubResource("BoxShape3D_kubjn")
 
-[node name="TutorialComplete" type="Area3D" parent="thirdPlat"]
+[node name="TutorialComplete" type="Area3D" parent="thirdPlat" groups=["TeloportIgnore"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="thirdPlat/TutorialComplete"]
@@ -683,7 +683,7 @@ shape = SubResource("CylinderShape3D_gaptg")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05125, -4.99, -41.0342)
 mesh = SubResource("PlaneMesh_6shs6")
 
-[node name="CourseDone" type="Area3D" parent="Maze/Walls/MeshInstance3D"]
+[node name="CourseDone" type="Area3D" parent="Maze/Walls/MeshInstance3D" groups=["TeloportIgnore"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/MeshInstance3D/CourseDone"]
