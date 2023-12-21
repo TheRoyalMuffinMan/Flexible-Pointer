@@ -16,9 +16,10 @@ const T_END: float = 1.0
 const CAM_HEIGHT: float = 40
 const MARKER_HEIGHT: float = 4
 const RESET_THRESHOLD: float = 0.1
-const START_TELOPORTS: int = 100
+const START_TELEPORTS: int = 100
 
 # On Ready Declarations
+@onready var teleport_error: AudioStreamPlayer = $TeleportError
 @onready var camera: XRCamera3D = $XROrigin3D/XRCamera3D
 @onready var left_controller: XRController3D = $XROrigin3D/LeftController
 @onready var right_controller: XRController3D = $XROrigin3D/RightController
@@ -34,6 +35,7 @@ const START_TELOPORTS: int = 100
 @onready var start_pos: Vector3 = self.global_position
 
 # Instance Declarations
+var num_teleports: int = START_TELEPORTS
 var n_points: int = 0
 var sphere_meshes: Array[MeshInstance3D] = []
 var point_one: MeshInstance3D = null
@@ -44,9 +46,9 @@ var right_calib_dist: float = 0.0
 var show_pointer: bool = false
 var altering_curve: bool = false
 var extend_pointer: bool = false
-var num_teleports: int = START_TELOPORTS
 
 func _ready():
+	# Generate N number of spheres given MAX_POINT all with attached collision and Area3D
 	for i in range(self.MAX_POINTS):
 		var mesh_instance: MeshInstance3D = MeshInstance3D.new()
 		var sphere_mesh: SphereMesh = SphereMesh.new()
@@ -156,7 +158,10 @@ func alter_length(controller: XRController3D, delta: float) -> void:
 	var start: Vector3 = self.camera.global_position + self.TORSO_OFFSET
 	var end: Vector3 = controller.global_position
 	var current_distance: float = start.distance_to(end)
-	var percentage: float = current_distance / self.left_calib_dist	
+	var percentage: float = current_distance / self.left_calib_dist
+	
+	# This checks if the origin point two hasn't been duplicated, if so
+	# duplicated it since we want to keep origin point two as as reference.	
 	if self.original_point_two == self.point_two:
 		self.point_two = self.point_two.duplicate()
 		self.left_controller.add_child(self.point_two)
@@ -198,51 +203,77 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 	sphere.global_position += diff * self.ALTERING_SPEED
 	sphere.material_override.albedo_color = self.UPDATED_COLOR
 
+# Check if two controllers are close by given a threshold, if so reset the pointer.
 func test_for_reset() -> void:
 	var left_position: Vector3 = self.left_controller.global_position
 	var right_position: Vector3 = self.right_controller.global_position
-	
-	var dist = left_position.distance_to(right_position)
+	var dist: float = left_position.distance_to(right_position)
 	
 	if dist < self.RESET_THRESHOLD:
+		# Remove point one (reference point = p1) since its not needed anymore
 		if self.point_one:
 			self.left_controller.remove_child(self.point_one)
 		self.point_one = null
+			
+		# Delete the duplicated point_two if it doesn't equal
+		# the original point_two
+		if self.original_point_two != self.point_two:
+			self.left_controller.remove_child(self.point_two)
+			self.point_two = self.original_point_two
+			self.point_two.visible = true
+
+# Check if overlapping bodies are StaticBody3Ds
+func check_for_static_bodies(area3D: Node3D) -> bool:
+	for node in area3D.get_overlapping_bodies():
+		if node.is_class("StaticBody3D"):
+			return true
+	return false
 
 # Executed once per frame (core logic)
 func _process(delta: float) -> void:
+	# If all off the map, reset to start (tutorial position until last platfom
+	# before maze, then resets there).
 	if self.global_position.y < -10:
-		self.global_position = start_pos
+		self.global_position = self.start_pos
 	
+	# Changing teleport text
 	self.teleport_text.clear()
 	self.teleport_text.add_text("Teleports: " + str(self.num_teleports))
+	
+	# Mapping map camera position to player position
 	self.map_camera.global_position.x = self.global_position.x
 	self.map_camera.global_position.z = self.global_position.z
 	self.map_camera.global_position.y = self.global_position.y + self.CAM_HEIGHT
 	
+	# Mapping player marker position to player position
 	self.player_marker.global_position.x = self.global_position.x
 	self.player_marker.global_position.z = self.global_position.z
 	self.player_marker.global_position.y = self.global_position.y + self.MARKER_HEIGHT
 	
+	# Mapping teleport position to final point position (p2)
 	self.teleport_marker.global_position.x = self.point_two.global_position.x
 	self.teleport_marker.global_position.z = self.point_two.global_position.z
 	self.teleport_marker.global_position.y = self.point_two.global_position.y + self.MARKER_HEIGHT
 	
-	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
 	# Remove menu after calibration for left and right
+	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
 	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:
 		self.camera.remove_child(menu)
 	
 	# Need to hold the trigger and finish calibration to use pointer
 	if not self.show_pointer or self.left_calib_dist == 0.0 or self.right_calib_dist == 0.0:
 		return
-		
+	
+	# Check if controllers are close by for reset
 	test_for_reset()
-		
+	
+	# Showcase line highlighting if p1 isn't selected
 	if self.point_one == null:
 		highlight_all(right_controller)
 	
+	# Allow user to alter curve if in this mode
 	if self.altering_curve:
+		# Select a p1 if one hasn't been selected in altering mode
 		if self.point_one == null:
 			self.point_one = select_sphere(self.right_controller).duplicate()
 			self.left_controller.add_child(self.point_one)
@@ -250,19 +281,23 @@ func _process(delta: float) -> void:
 		
 	var start: Vector3 = self.point_zero.global_position
 	var end: Vector3 = self.point_two.global_position
+	# Let it be midpoint if p1 == null
 	var mid: Vector3 = (start + end) / 2.0
 	if self.point_one != null:
 		mid = self.point_one.global_position
 	
-	self.point_two.visible = true
-	self.teleport_marker.visible = true
+	# Change location of meshes when given a new p0, p1, p2 -> start, mid, end
 	alter_meshes(generate_points(start, mid, end))
+	
+	# Check if user is in extending pointer mode
 	if self.extend_pointer:
 		alter_length(self.left_controller, delta)
 
 func _on_left_controller_button_pressed(name: String) -> void:
 	# Only allow teleport if left and right is calibrated
 	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
+		self.point_two.visible = true
+		self.teleport_marker.visible = true
 		self.show_pointer = true
 	
 	# Only allow extending if pointer is visible
@@ -271,39 +306,39 @@ func _on_left_controller_button_pressed(name: String) -> void:
 	
 	# Left calibration
 	if name == "ax_button" and self.left_calib_dist == 0.0:
+		# Update colors on calibration screen
 		self.left_button.get_theme_stylebox("normal").bg_color = self.BUTTON_GREEN
+		
+		# Find left calibration distance
 		var start: Vector3 = self.camera.global_position + self.TORSO_OFFSET
 		var end: Vector3 = self.left_controller.global_position
 		self.left_calib_dist = start.distance_to(end)
 
-func check_for_static_bodies(area3D: Node3D) -> bool:
-	for node in area3D.get_overlapping_bodies():
-		if node.is_class("StaticBody3D"):
-			return true
-	return false
-
 func _on_left_controller_button_released(name: String) -> void:
 	# Trigger release only occurs after left and right are calibrated
 	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
+		
+		# Perform collision checking prior to teleportation
 		var is_overlapping: bool = check_for_static_bodies(point_two.get_child(0))
 		for i in range(self.n_points):
 			var area3D: Area3D = self.sphere_meshes[i].get_child(0)
 			if check_for_static_bodies(area3D):
 				is_overlapping = true
 		
+		# Reset position back to start position (beginning of tutorial or 
+		# beginning of maze)
 		if self.num_teleports <= 0:
 			self.global_position = self.start_pos
-		
-		if not is_overlapping and self.num_teleports > 0:
+			self.num_teleports = self.START_TELEPORTS
+		# Allow user to teleport if nothing is overlapping
+		elif not is_overlapping:
 			self.global_position = self.point_two.global_position
 			self.num_teleports -= 1
-			
 			self.rotation_degrees.x = 0
 			self.rotation_degrees.z = 0
-			
-		elif is_overlapping:
-			$teloportError.play()
-		
+		# Else if there is overlap, play error noise 
+		else:
+			self.teleport_error.play()
 		
 		# Delete the duplicated point_two if it doesn't equal
 		# the original point_two
@@ -312,23 +347,26 @@ func _on_left_controller_button_released(name: String) -> void:
 			self.point_two = self.original_point_two
 			self.point_two.visible = true
 		
+		# Remove point one (reference point = p1) since its not needed anymore
 		if self.point_one:
 			self.left_controller.remove_child(self.point_one)
-			
+		
+		# Reset all spheres back to being invisible
 		for i in range(self.n_points):
 			self.sphere_meshes[i].visible = false
 		
+		# Clean
 		self.point_one = null
 		self.point_two.visible = false
 		self.teleport_marker.visible = false
 		self.show_pointer = false
 	
-	if name == "grip_click" and self.left_calib_dist != 0.0 and self.point_two.visible:
+	if name == "grip_click" and self.show_pointer:
 		self.extend_pointer = false
 
 func _on_right_controller_button_pressed(name: String) -> void:
-	# Point selection after calibration
-	if name == "grip_click" and self.right_calib_dist != 0.0 and self.point_two.visible:
+	# Point selection once pointer is visible
+	if name == "grip_click" and self.show_pointer:
 		self.altering_curve = true
 		self.right_controller_origin = self.right_controller.global_position
 	
@@ -340,13 +378,12 @@ func _on_right_controller_button_pressed(name: String) -> void:
 		self.right_calib_dist = start.distance_to(end)
 
 func _on_right_controller_button_released(name: String) -> void:
-	# Point release after calibration
-	if name == "grip_click" and self.right_calib_dist != 0.0 and self.point_two.visible:
+	# Point release if pointer is visible
+	if name == "grip_click" and self.show_pointer:
 		self.altering_curve = false
 
-func _on_node_3d_tutorial_done(new_pos):
+func _on_node_3d_tutorial_done(new_pos: Vector3) -> void:
 	self.start_pos = new_pos
-	self.num_teleports = START_TELOPORTS
 
-func _on_node_3d_on_top():
+func _on_node_3d_on_top() -> void:
 	self.global_position.y = self.global_position.y - 4
