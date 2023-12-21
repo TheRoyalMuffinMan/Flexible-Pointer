@@ -8,5 +8,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	# Spin the node so that the barrier spins in a circle
 	rotate_y(-deg_to_rad(50*delta))
 

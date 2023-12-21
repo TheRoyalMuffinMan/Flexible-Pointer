@@ -8,6 +8,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	# Keeps track of time for the trig functions
 	time = time + delta
-	$Pliller.position.z = 7.5*cos(time*deg_to_rad(60))
+	
+	# Move the piller in a cyclic fashion 
+	$Pliller.position.z = -7.5*cos(time*deg_to_rad(60))
 	
