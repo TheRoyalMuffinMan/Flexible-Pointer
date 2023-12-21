@@ -8,6 +8,7 @@ const BUTTON_GREEN: Color = Color(0.22, 0.55, 0, 1)
 const SPHERE_RADIUS: float = 0.05
 const SPHERE_HEIGHT: float = 0.10
 const ALTERING_SPEED: float = 4
+const ALTERING_LENGTH: float = 2.5
 const DISTANCE_BETWEEN: float = 1
 const MAX_POINTS: float = 50
 const MIN_INDEX: int = 1
@@ -15,6 +16,7 @@ const T_END: float = 1.0
 const CAM_HEIGHT: float = 40
 const MARKER_HEIGHT: float = 4
 const RESET_THRESHOLD: float = 0.1
+const START_TELOPORTS: int = 100
 
 # On Ready Declarations
 @onready var camera: XRCamera3D = $XROrigin3D/XRCamera3D
@@ -42,7 +44,7 @@ var right_calib_dist: float = 0.0
 var show_pointer: bool = false
 var altering_curve: bool = false
 var extend_pointer: bool = false
-var num_teleports: int = 100
+var num_teleports: int = START_TELOPORTS
 
 func _ready():
 	for i in range(self.MAX_POINTS):
@@ -164,7 +166,7 @@ func alter_length(controller: XRController3D, delta: float) -> void:
 	var p0: Vector3 = self.sphere_meshes[self.n_points - 1].global_position
 	var p1: Vector3 = self.point_two.global_position
 	var direction_vector: Vector3 = p1 - p0
-	self.point_two.global_position += (direction_vector * direction) * self.ALTERING_SPEED * delta
+	self.point_two.global_position += (direction_vector * direction) * self.ALTERING_LENGTH * delta
 
 # Selects a sphere using the distance of the right controller to the user's torso
 func select_sphere(controller: XRController3D) -> MeshInstance3D:
@@ -289,9 +291,19 @@ func _on_left_controller_button_released(name: String) -> void:
 			if check_for_static_bodies(area3D):
 				is_overlapping = true
 		
-		if not is_overlapping:
+		if self.num_teleports <= 0:
+			self.global_position = self.start_pos
+		
+		if not is_overlapping and self.num_teleports > 0:
 			self.global_position = self.point_two.global_position
 			self.num_teleports -= 1
+			
+			self.rotation_degrees.x = 0
+			self.rotation_degrees.z = 0
+			
+		elif is_overlapping:
+			$teloportError.play()
+		
 		
 		# Delete the duplicated point_two if it doesn't equal
 		# the original point_two
@@ -333,8 +345,8 @@ func _on_right_controller_button_released(name: String) -> void:
 		self.altering_curve = false
 
 func _on_node_3d_tutorial_done(new_pos):
-	start_pos = new_pos
-	#TODO: Adjust number teloports 
+	self.start_pos = new_pos
+	self.num_teleports = START_TELOPORTS
 
 func _on_node_3d_on_top():
 	self.global_position.y = self.global_position.y - 4

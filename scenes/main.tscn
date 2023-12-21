@@ -1,10 +1,11 @@
-[gd_scene load_steps=27 format=3 uid="uid://d46wrkgdeynk"]
+[gd_scene load_steps=28 format=3 uid="uid://d46wrkgdeynk"]
 
 [ext_resource type="Script" path="res://scripts/initialize.gd" id="1_xecma"]
 [ext_resource type="Script" path="res://scripts/pointer.gd" id="2_48hac"]
 [ext_resource type="PackedScene" uid="uid://dw2kfbg15qqeu" path="res://controllers/controller_l.fbx" id="3_y2kpf"]
 [ext_resource type="PackedScene" uid="uid://doel0ns5nc6bm" path="res://controllers/controller_r.fbx" id="4_5ti0a"]
 [ext_resource type="PackedScene" uid="uid://csmmoroyqwksp" path="res://scenes/ObsCourse.tscn" id="5_0m75l"]
+[ext_resource type="AudioStream" uid="uid://ciyihbm82kp77" path="res://Materials/error-sound-39539.mp3" id="5_4kioc"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1epba"]
 size = Vector3(0.5, 1.5, 0.5)
@@ -165,6 +166,9 @@ pose = &"aim"
 
 [node name="RightControllerMesh" parent="Player/XROrigin3D/RightController" instance=ExtResource("4_5ti0a")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0.05)
+
+[node name="teloportError" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("5_4kioc")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_pi0m0")
