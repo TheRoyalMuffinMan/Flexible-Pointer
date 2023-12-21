@@ -203,6 +203,8 @@ func test_for_reset() -> void:
 	var dist = left_position.distance_to(right_position)
 	
 	if dist < self.RESET_THRESHOLD:
+		if self.point_one:
+			self.left_controller.remove_child(self.point_one)
 		self.point_one = null
 
 # Executed once per frame (core logic)
