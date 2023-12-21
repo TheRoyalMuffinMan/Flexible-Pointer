@@ -11,12 +11,12 @@ const ALTERING_SPEED: float = 4
 const ALTERING_LENGTH: float = 2.5
 const DISTANCE_BETWEEN: float = 1
 const MAX_POINTS: float = 50
-const MIN_INDEX: int = 1
 const T_END: float = 1.0
 const CAM_HEIGHT: float = 40
 const MARKER_HEIGHT: float = 4
 const RESET_THRESHOLD: float = 0.1
 const START_TELEPORTS: int = 100
+const MIN_INDEX: int = 1
 
 # On Ready Declarations
 @onready var teleport_error: AudioStreamPlayer = $TeleportError
@@ -35,8 +35,8 @@ const START_TELEPORTS: int = 100
 @onready var start_pos: Vector3 = self.global_position
 
 # Instance Declarations
-var num_teleports: int = START_TELEPORTS
 var n_points: int = 0
+var num_teleports: int = START_TELEPORTS
 var sphere_meshes: Array[MeshInstance3D] = []
 var point_one: MeshInstance3D = null
 var right_controller_origin: Vector3 = Vector3.ZERO
@@ -47,7 +47,7 @@ var show_pointer: bool = false
 var altering_curve: bool = false
 var extend_pointer: bool = false
 
-func _ready():
+func _ready() -> void:
 	# Generate N number of spheres given MAX_POINT all with attached collision and Area3D
 	for i in range(self.MAX_POINTS):
 		var mesh_instance: MeshInstance3D = MeshInstance3D.new()
@@ -293,19 +293,19 @@ func _process(delta: float) -> void:
 	if self.extend_pointer:
 		alter_length(self.left_controller, delta)
 
-func _on_left_controller_button_pressed(name: String) -> void:
+func _on_left_controller_button_pressed(input_name: String) -> void:
 	# Only allow teleport if left and right is calibrated
-	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
+	if input_name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
 		self.point_two.visible = true
 		self.teleport_marker.visible = true
 		self.show_pointer = true
 	
 	# Only allow extending if pointer is visible
-	if name == "grip_click" and self.show_pointer:
+	if input_name == "grip_click" and self.show_pointer:
 		self.extend_pointer = true
 	
 	# Left calibration
-	if name == "ax_button" and self.left_calib_dist == 0.0:
+	if input_name == "ax_button" and self.left_calib_dist == 0.0:
 		# Update colors on calibration screen
 		self.left_button.get_theme_stylebox("normal").bg_color = self.BUTTON_GREEN
 		
@@ -314,9 +314,9 @@ func _on_left_controller_button_pressed(name: String) -> void:
 		var end: Vector3 = self.left_controller.global_position
 		self.left_calib_dist = start.distance_to(end)
 
-func _on_left_controller_button_released(name: String) -> void:
+func _on_left_controller_button_released(input_name: String) -> void:
 	# Trigger release only occurs after left and right are calibrated
-	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
+	if input_name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
 		
 		# Perform collision checking prior to teleportation
 		var is_overlapping: bool = check_for_static_bodies(point_two.get_child(0))
@@ -361,25 +361,25 @@ func _on_left_controller_button_released(name: String) -> void:
 		self.teleport_marker.visible = false
 		self.show_pointer = false
 	
-	if name == "grip_click" and self.show_pointer:
+	if input_name == "grip_click" and self.show_pointer:
 		self.extend_pointer = false
 
-func _on_right_controller_button_pressed(name: String) -> void:
+func _on_right_controller_button_pressed(input_name: String) -> void:
 	# Point selection once pointer is visible
-	if name == "grip_click" and self.show_pointer:
+	if input_name == "grip_click" and self.show_pointer:
 		self.altering_curve = true
 		self.right_controller_origin = self.right_controller.global_position
 	
 	# Right calibration
-	if name == "ax_button" and self.right_calib_dist == 0.0:
+	if input_name == "ax_button" and self.right_calib_dist == 0.0:
 		self.right_button.get_theme_stylebox("normal").bg_color = self.BUTTON_GREEN
 		var start: Vector3 = self.camera.global_position + self.TORSO_OFFSET
 		var end: Vector3 = self.right_controller.global_position
 		self.right_calib_dist = start.distance_to(end)
 
-func _on_right_controller_button_released(name: String) -> void:
+func _on_right_controller_button_released(input_name: String) -> void:
 	# Point release if pointer is visible
-	if name == "grip_click" and self.show_pointer:
+	if input_name == "grip_click" and self.show_pointer:
 		self.altering_curve = false
 
 func _on_node_3d_tutorial_done(new_pos: Vector3) -> void:
