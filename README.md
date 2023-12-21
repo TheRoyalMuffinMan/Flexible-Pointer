@@ -23,10 +23,13 @@ In order to best utilize and showcase our pointer, we decided to supply the user
 ![Map & Counter](images/mapcounter.png "Map and Teleport Counter")
 
 ### Obstacle Course
-Our obstacle is specificed geared to be completed optimally with the flexible pointer. This .... robert write this part
+Our obstacle is specifically geared to be completed optimally with the flexible pointer. It is set up to be a succinct display of the pointer's capabilities, with each challenge asking the user to utilize the pointer in a new way. We start with three platforms floating in space, with the idea that the user can use these to start getting used to working with the pointer’s ability to extend, retract and bend. Once the user has started in the actual maze, then the real challenges begin. The first challenges are relatively simple, the user only has to do a slalom using the flexing ability of the pointer to do so in as few teleports as possible. Then, the user encounters a narrow crack in the walls which they have to maneuver the pointer with sufficient dexterity to slip through, hopefully getting close enough to the next challenge that they don’t have to waste further teleports getting even closer. That next challenge is a “jump” where the user has to use the pointer to get over a high wall, this tests the user’s ability to use the pointer’s verticality. Following that, the user is tested for a slightly different type of dexterity with two relatively narrow and offset holes in two different walls, and the user can hopefully get through both of these at once. The next task is for the user to go down a relatively long hallway with a bend at the end, this tests the user’s ability to manipulate the pointer at long distances. Finally, the last test tests the user's speed and reflexes by asking them to move through a bunch of moving obstacles. Those who make it to the end will receive a reward, if you can do it in a low enough number of teleports.
 
 ![Obstacle Course](images/obstaclecourse.png "Obstacle Course")
 
 ## Function Documentation
 
 ## Attributions
+[1]A. Olwal and S. Feiner, “The Flexible Pointer: An Interaction Technique for Selection in Augmented and Virtual Reality,” in ACM Symposium on User Interface Software and Technology, 2003. Accessed: Dec. 21, 2023. [Online]. Available: https://uist.acm.org/archive/adjunct/2003/pdf/posters/p17-olwal.pdf
+
+Sound files sourced from Pixabay: [Medieval Fanfare](https://pixabay.com/sound-effects/medieval-fanfare-6826/) [Error Sound](https://pixabay.com/sound-effects/error-sound-39539/)
