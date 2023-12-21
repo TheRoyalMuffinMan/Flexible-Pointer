@@ -39,12 +39,22 @@ var left_calib_dist: float = 0.0
 var right_calib_dist: float = 0.0
 var show_pointer: bool = false
 var altering_curve: bool = false
+var extend_pointer: bool = false
 
 func _ready():
 	for i in range(self.MAX_POINTS):
 		var mesh_instance: MeshInstance3D = MeshInstance3D.new()
 		var sphere_mesh: SphereMesh = SphereMesh.new()
 		var material: StandardMaterial3D = StandardMaterial3D.new()
+		var area3D: Area3D = Area3D.new()
+		var collision_shape: CollisionShape3D = CollisionShape3D.new()
+		var sphere_shape: SphereShape3D = SphereShape3D.new()
+		var script = load("res://scripts/point.gd").new()
+		
+		# Setting up collisions
+		sphere_shape.radius = self.SPHERE_RADIUS
+		collision_shape.shape = sphere_shape
+		area3D.add_child(collision_shape)
 		
 		material.albedo_color = self.DEFAULT_COLOR
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -56,6 +66,10 @@ func _ready():
 		mesh_instance.mesh = sphere_mesh
 		mesh_instance.material_override = material
 		mesh_instance.global_position = Vector3.ZERO
+		mesh_instance.add_child(area3D)
+		mesh_instance.set_script(script)
+		area3D.body_entered.connect(script._on_area_3d_body_entered)
+		area3D.body_exited.connect(script._on_area_3d_body_exited)
 		
 		self.left_controller.add_child(mesh_instance)
 		self.sphere_meshes.append(mesh_instance)
@@ -143,18 +157,13 @@ func alter_length(controller: XRController3D, delta: float) -> void:
 	var start: Vector3 = self.camera.global_position + self.TORSO_OFFSET
 	var end: Vector3 = controller.global_position
 	var current_distance: float = start.distance_to(end)
-	var percentage: float = current_distance / self.left_calib_dist
-	
-	# If in the "grey area" (0.30 < p < 0.70), don't expand or retract
-	if percentage < 0.70 and percentage > 0.30:
-		return
-	
+	var percentage: float = current_distance / self.left_calib_dist	
 	if self.original_point_two == self.point_two:
 		self.point_two = self.point_two.duplicate()
 		self.left_controller.add_child(self.point_two)
 		self.original_point_two.visible = false
 	
-	var direction: int = 1 if percentage >= 0.70 else -1
+	var direction: int = 1 if percentage >= 0.50 else -1
 	var p0: Vector3 = self.sphere_meshes[self.n_points - 1].global_position
 	var p1: Vector3 = self.point_two.global_position
 	var direction_vector: Vector3 = p1 - p0
@@ -232,12 +241,16 @@ func _process(delta: float) -> void:
 	
 	self.point_two.visible = true
 	self.teleport_marker.visible = true
-	alter_meshes(generate_points(start, mid, end))	
-	alter_length(self.left_controller, delta)
+	alter_meshes(generate_points(start, mid, end))
+	if self.extend_pointer:
+		alter_length(self.left_controller, delta)
 
 func _on_left_controller_button_pressed(name: String) -> void:
 	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
 		self.show_pointer = true
+	
+	if name == "grip_click" and self.left_calib_dist != 0.0 and self.point_two.visible:
+		self.extend_pointer = true
 	
 	# Left Calibration
 	if name == "ax_button" and self.left_calib_dist == 0.0:
@@ -266,7 +279,10 @@ func _on_left_controller_button_released(name: String) -> void:
 		self.point_two.visible = false
 		self.teleport_marker.visible = false
 		self.show_pointer = false
-			
+	
+	if name == "grip_click" and self.left_calib_dist != 0.0 and self.point_two.visible:
+		self.extend_pointer = false
+
 func _on_right_controller_button_pressed(name: String) -> void:
 	# Point selection after calibration
 	if name == "grip_click" and self.right_calib_dist != 0.0 and self.point_two.visible:
