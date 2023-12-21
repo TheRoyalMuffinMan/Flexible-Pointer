@@ -102,7 +102,7 @@ func average_distance(p0: Vector3, p1: Vector3, p2: Vector3, incrementor: float)
 
 # This performs a binary search between the range (0.0, 1.0) to find a 
 # incrementor that will produce points within a given distance (maximized).
-# Total Runtime: O(log(-ε) * O(T_END / mid))
+# Total Runtime: O(log(-ε) * (T_END / mid))
 func approximate_incrementor(p0: Vector3, p1: Vector3, p2: Vector3, max_distance: float) -> float:
 	var low: float = 0.0
 	var high: float = 1.0

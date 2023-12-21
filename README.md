@@ -13,7 +13,7 @@ In the paper, they perform flexing between two controllers, utilizing a quadrati
 ![flexible](images/flexible.png "Flexing The Pointer")
 
 ### Extension
-Our current implementation supports extension of the pointer in the given direction that it is pointing. This is done by computing a direction vector between *p<sub>n</sub>* where [*point_one, p<sub>0</sub>, ..., p<sub>n</sub>, point_two*] and *point_two*. Thus allowing us to easily expand the direction the pointer is being flexed in. We can dynamically supply more spheres as the pointer expands allowing the user to maintain decent visibility on the length of the pointer. Similarly the rate at which pointers appear is determined by bisection.
+Our current implementation supports extension of the pointer in the given direction that it is pointing. This is done by computing a direction vector between *k<sub>n</sub>* where [*point_zero, k<sub>0</sub>, ..., k<sub>n</sub>, point_two*] and *point_two*. Thus allowing us to easily expand the direction the pointer is being flexed in. We can dynamically supply more spheres as the pointer expands allowing the user to maintain decent visibility on the length of the pointer. Similarly the rate at which pointers appear is determined by bisection.
 
 ![extention](images/extention.png "Extending The Pointer")
 
@@ -27,7 +27,10 @@ Our obstacle is specifically geared to be completed optimally with the flexible 
 
 ![Obstacle Course](images/obstaclecourse.png "Obstacle Course")
 
-## Function Documentation
+## Notable Function Documentation
+- `quadratic_bezier`: This generates a bezier point by generating two new points *q<sub>0</sub>* and *q<sub>1</sub>* with linear interpolation between (*p<sub>0</sub>*, *p<sub>1</sub>*) and (*p<sub>1</sub>*, *p<sub>2</sub>*) given time *t*. Linear interpolation between (*q<sub>0</sub>*, *q<sub>1</sub>*) will be a point that is on the bezier curve.
+
+- `approximate_incrementor`: This is where the bisection occurs to find an incrementor that will produce points that are as close to the given distance (or until the difference between high and low is less than epsilon). It can be shown that the algorithm runs in approximately *O(log(-ε) * (T<sub>END</sub> / mid))*
 
 ## Attributions
 [1]A. Olwal and S. Feiner, “The Flexible Pointer: An Interaction Technique for Selection in Augmented and Virtual Reality,” in ACM Symposium on User Interface Software and Technology, 2003. Accessed: Dec. 21, 2023. [Online]. Available: https://uist.acm.org/archive/adjunct/2003/pdf/posters/p17-olwal.pdf
