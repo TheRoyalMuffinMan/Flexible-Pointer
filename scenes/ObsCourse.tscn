@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://csmmoroyqwksp"]
+[gd_scene load_steps=80 format=3 uid="uid://csmmoroyqwksp"]
 
 [ext_resource type="Script" path="res://scripts/ObsCourseConnect.gd" id="1_bmhms"]
 [ext_resource type="Material" uid="uid://drptuif4iilgr" path="res://Materials/ObsMat.tres" id="1_yqj0w"]
@@ -92,17 +92,17 @@ size = Vector3(42, 10, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_3nu66"]
 material = ExtResource("3_h3fql")
-size = Vector3(36, 10, 1)
+size = Vector3(20, 10, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3kv7d"]
-size = Vector3(36, 10, 1)
+size = Vector3(20, 10, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_o7b05"]
 material = ExtResource("3_h3fql")
-size = Vector3(36, 10, 1)
+size = Vector3(25, 10, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_smvw8"]
-size = Vector3(36, 10, 1)
+size = Vector3(25, 10, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8k18n"]
 size = Vector3(10, 10, 90)
@@ -112,11 +112,15 @@ material = ExtResource("3_h3fql")
 size = Vector3(10, 10, 90)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_p0vsw"]
-size = Vector3(33, 10, 1)
+size = Vector3(25, 10, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_yyhb1"]
 material = ExtResource("3_h3fql")
-size = Vector3(33, 10, 1)
+size = Vector3(25, 10, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yik3b"]
+material = ExtResource("3_h3fql")
+size = Vector3(25, 10, 1)
 
 [sub_resource type="PrismMesh" id="PrismMesh_mqbr8"]
 material = ExtResource("3_h3fql")
@@ -392,7 +396,7 @@ mesh = SubResource("BoxMesh_ompqi")
 shape = SubResource("BoxShape3D_l8krh")
 
 [node name="blockerOne" type="StaticBody3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 39.6962)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.14967, 0, 39.6962)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/blockerOne"]
 mesh = SubResource("BoxMesh_3nu66")
@@ -401,7 +405,7 @@ mesh = SubResource("BoxMesh_3nu66")
 shape = SubResource("BoxShape3D_3kv7d")
 
 [node name="Door1" type="StaticBody3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.78648, 0, -36.7572)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.10408, 0, -36.7572)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/Door1"]
 mesh = SubResource("BoxMesh_o7b05")
@@ -428,7 +432,7 @@ shape = SubResource("BoxShape3D_8k18n")
 mesh = SubResource("BoxMesh_stl3o")
 
 [node name="InnerWallOne" type="StaticBody3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.9597, 0, 34.1476)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.6112, 0, 34.1476)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/InnerWallOne"]
 shape = SubResource("BoxShape3D_p0vsw")
@@ -437,7 +441,7 @@ shape = SubResource("BoxShape3D_p0vsw")
 mesh = SubResource("BoxMesh_yyhb1")
 
 [node name="InnerWallTwo" type="StaticBody3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.00282, 0, 28.2165)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.72176, 0, 28.2165)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/InnerWallTwo"]
 shape = SubResource("BoxShape3D_p0vsw")
@@ -446,13 +450,13 @@ shape = SubResource("BoxShape3D_p0vsw")
 mesh = SubResource("BoxMesh_yyhb1")
 
 [node name="InnerWallThree" type="StaticBody3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.7578, 0, 23.248)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.0613, 0, 23.248)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Maze/Walls/InnerWallThree"]
 shape = SubResource("BoxShape3D_p0vsw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/InnerWallThree"]
-mesh = SubResource("BoxMesh_yyhb1")
+mesh = SubResource("BoxMesh_yik3b")
 
 [node name="AngleWall" type="StaticBody3D" parent="Maze/Walls"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -11.8542, 0, 28.7941)
