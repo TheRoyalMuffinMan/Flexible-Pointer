@@ -32,6 +32,10 @@ Our obstacle is specifically geared to be completed optimally with the flexible 
 
 - `approximate_incrementor`: This is where the bisection occurs to find an incrementor that will produce points that are as close to the given distance (or until the difference between high and low is less than epsilon). It can be shown that the algorithm runs in approximately *O(log(-ε) * (T<sub>END</sub> / mid))*
 
+- `alter_length`: This changes the length of the pointer. If the user's arm passes the 50% threshold, it will extend the pointer. But if the user's arm is below that threshold, it will retract the pointer.
+
+- `alter_curve`: This just allows the user to mimic the location of *point_one*, or the point that is altering the curve based on the position of the right controller.
+
 ## Attributions
 [1]A. Olwal and S. Feiner, “The Flexible Pointer: An Interaction Technique for Selection in Augmented and Virtual Reality,” in ACM Symposium on User Interface Software and Technology, 2003. Accessed: Dec. 21, 2023. [Online]. Available: https://uist.acm.org/archive/adjunct/2003/pdf/posters/p17-olwal.pdf
 
