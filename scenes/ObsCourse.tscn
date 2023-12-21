@@ -1,9 +1,10 @@
-[gd_scene load_steps=78 format=3 uid="uid://csmmoroyqwksp"]
+[gd_scene load_steps=79 format=3 uid="uid://csmmoroyqwksp"]
 
 [ext_resource type="Script" path="res://scenes/ObsCourseConnect.gd" id="1_s56tw"]
 [ext_resource type="Material" uid="uid://drptuif4iilgr" path="res://Materials/ObsMat.tres" id="1_yqj0w"]
 [ext_resource type="AudioStream" uid="uid://bgwibar1fbl0m" path="res://Materials/medieval-fanfare-6826.mp3" id="2_44ysf"]
 [ext_resource type="Material" uid="uid://chnod3xvcmhst" path="res://Materials/MazeWall.tres" id="3_h3fql"]
+[ext_resource type="Material" uid="uid://cobquhubkg2cp" path="res://Materials/MazeMat.tres" id="3_tkn14"]
 [ext_resource type="Script" path="res://scenes/Spin1.gd" id="4_hoaxb"]
 [ext_resource type="Script" path="res://scenes/Mover1.gd" id="5_2skq0"]
 [ext_resource type="Script" path="res://scenes/Spin2.gd" id="5_14wx3"]
@@ -24,6 +25,7 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_b04w6"]
+material = ExtResource("3_tkn14")
 size = Vector2(6, 6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kubjn"]
@@ -44,6 +46,7 @@ size = Vector3(16, 20, 1)
 size = Vector3(16, 20, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_wtera"]
+material = ExtResource("3_tkn14")
 size = Vector3(6, 1, 6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b6t7e"]
@@ -54,10 +57,10 @@ albedo_color = Color(0.376471, 0, 1, 0.054902)
 
 [sub_resource type="BoxMesh" id="BoxMesh_3osni"]
 material = SubResource("StandardMaterial3D_30o4f")
-size = Vector3(90, 1, 90)
+size = Vector3(45, 1, 90)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wnnor"]
-size = Vector3(90, 1, 90)
+size = Vector3(45, 1, 90)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d7fjh"]
 transparency = 1
@@ -65,13 +68,13 @@ albedo_color = Color(0.376471, 0, 1, 0.0352941)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ssrmd"]
 material = SubResource("StandardMaterial3D_d7fjh")
-size = Vector3(90, 1, 90)
+size = Vector3(45, 1, 90)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_yiobq"]
-size = Vector3(90, 1, 90)
+size = Vector3(45, 1, 90)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iyr0b"]
-size = Vector3(90, 1, 90)
+size = Vector3(45, 1, 90)
 
 [sub_resource type="BoxMesh" id="BoxMesh_v1ydu"]
 material = ExtResource("3_h3fql")
@@ -258,6 +261,7 @@ environment = SubResource("Environment_n1m4m")
 
 [node name="FinishSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_44ysf")
+volume_db = 2.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
@@ -340,7 +344,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("BoxShape3D_b6t7e")
 
 [node name="Maze" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, -80)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.69387, 5.5, -80)
 
 [node name="MazeBase" type="StaticBody3D" parent="Maze"]
 
@@ -366,7 +370,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("BoxShape3D_iyr0b")
 
 [node name="Walls" type="Node3D" parent="Maze"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.48668, 5.5, 0)
 
 [node name="OuterWallR" type="StaticBody3D" parent="Maze/Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 42.5455)
@@ -450,7 +454,7 @@ shape = SubResource("BoxShape3D_p0vsw")
 mesh = SubResource("BoxMesh_yyhb1")
 
 [node name="AngleWall" type="StaticBody3D" parent="Maze/Walls"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -11.6791, 0, 28.7941)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -11.8542, 0, 28.7941)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Maze/Walls/AngleWall"]
 mesh = SubResource("PrismMesh_mqbr8")
