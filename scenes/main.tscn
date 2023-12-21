@@ -1,10 +1,9 @@
-[gd_scene load_steps=25 format=3 uid="uid://d46wrkgdeynk"]
+[gd_scene load_steps=24 format=3 uid="uid://d46wrkgdeynk"]
 
 [ext_resource type="Script" path="res://scripts/initialize.gd" id="1_xecma"]
 [ext_resource type="Script" path="res://scripts/pointer.gd" id="2_48hac"]
 [ext_resource type="PackedScene" uid="uid://dw2kfbg15qqeu" path="res://controllers/controller_l.fbx" id="3_y2kpf"]
 [ext_resource type="PackedScene" uid="uid://doel0ns5nc6bm" path="res://controllers/controller_r.fbx" id="4_5ti0a"]
-[ext_resource type="Script" path="res://scripts/point.gd" id="4_gtxr6"]
 [ext_resource type="PackedScene" uid="uid://csmmoroyqwksp" path="res://scenes/ObsCourse.tscn" id="5_0m75l"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1epba"]
@@ -133,7 +132,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.57851)
 visible = false
 mesh = SubResource("SphereMesh_oythw")
 surface_material_override/0 = SubResource("StandardMaterial3D_vjshw")
-script = ExtResource("4_gtxr6")
 
 [node name="Area3D" type="Area3D" parent="Player/XROrigin3D/LeftController/PointTwo"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.57851)
@@ -251,8 +249,6 @@ skeleton = NodePath("../PlayerMarker")
 
 [connection signal="button_pressed" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_pressed"]
 [connection signal="button_released" from="Player/XROrigin3D/LeftController" to="Player" method="_on_left_controller_button_released"]
-[connection signal="body_entered" from="Player/XROrigin3D/LeftController/PointTwo/Area3D" to="Player/XROrigin3D/LeftController/PointTwo" method="_on_area_3d_body_entered"]
-[connection signal="body_exited" from="Player/XROrigin3D/LeftController/PointTwo/Area3D" to="Player/XROrigin3D/LeftController/PointTwo" method="_on_area_3d_body_exited"]
 [connection signal="button_pressed" from="Player/XROrigin3D/RightController" to="Player" method="_on_right_controller_button_pressed"]
 [connection signal="button_released" from="Player/XROrigin3D/RightController" to="Player" method="_on_right_controller_button_released"]
 [connection signal="onTop" from="Node3D" to="Player" method="_on_node_3d_on_top"]

@@ -40,6 +40,7 @@ var right_calib_dist: float = 0.0
 var show_pointer: bool = false
 var altering_curve: bool = false
 var extend_pointer: bool = false
+var teleport: int = 0
 
 func _ready():
 	for i in range(self.MAX_POINTS):
@@ -49,7 +50,6 @@ func _ready():
 		var area3D: Area3D = Area3D.new()
 		var collision_shape: CollisionShape3D = CollisionShape3D.new()
 		var sphere_shape: SphereShape3D = SphereShape3D.new()
-		var script = load("res://scripts/point.gd").new()
 		
 		# Setting up collisions
 		sphere_shape.radius = self.SPHERE_RADIUS
@@ -65,11 +65,7 @@ func _ready():
 		mesh_instance.visible = false
 		mesh_instance.mesh = sphere_mesh
 		mesh_instance.material_override = material
-		mesh_instance.global_position = Vector3.ZERO
 		mesh_instance.add_child(area3D)
-		mesh_instance.set_script(script)
-		area3D.body_entered.connect(script._on_area_3d_body_entered)
-		area3D.body_exited.connect(script._on_area_3d_body_exited)
 		
 		self.left_controller.add_child(mesh_instance)
 		self.sphere_meshes.append(mesh_instance)
@@ -262,7 +258,13 @@ func _on_left_controller_button_pressed(name: String) -> void:
 func _on_left_controller_button_released(name: String) -> void:
 	# Trigger cleanup
 	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
-		self.global_position = self.point_two.global_position
+		var is_overlapping: bool = point_two.get_child(0).has_overlapping_bodies()
+		for i in range(self.n_points):
+			var area3D: Area3D = self.sphere_meshes[i].get_child(0)
+			is_overlapping = area3D.has_overlapping_bodies()
+		
+		if not is_overlapping:
+			self.global_position = self.point_two.global_position
 		
 		# Delete the duplicated point_two if it doesn't equal
 		# the original point_two
@@ -271,7 +273,8 @@ func _on_left_controller_button_released(name: String) -> void:
 			self.point_two = self.original_point_two
 			self.point_two.visible = true
 		
-		self.left_controller.remove_child(self.point_one)
+		if self.point_one:
+			self.left_controller.remove_child(self.point_one)
 		for i in range(self.n_points):
 			self.sphere_meshes[i].visible = false
 		
