@@ -39,6 +39,7 @@ var left_calib_dist: float = 0.0
 var right_calib_dist: float = 0.0
 var show_pointer: bool = false
 var altering_curve: bool = false
+var num_teloports: int = 100
 
 func _ready():
 	for i in range(self.MAX_POINTS):
