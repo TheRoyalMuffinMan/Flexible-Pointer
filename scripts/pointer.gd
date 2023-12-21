@@ -14,6 +14,7 @@ const MIN_INDEX: int = 1
 const T_END: float = 1.0
 const CAM_HEIGHT: float = 40
 const MARKER_HEIGHT: float = 4
+const RESET_THRESHOLD: float = 0.1
 
 # On Ready Declarations
 @onready var camera: XRCamera3D = $XROrigin3D/XRCamera3D
@@ -24,6 +25,7 @@ const MARKER_HEIGHT: float = 4
 @onready var original_point_two: MeshInstance3D = $XROrigin3D/LeftController/PointTwo
 @onready var left_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/LeftButton")
 @onready var right_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/RightButton")
+@onready var teleport_text: RichTextLabel = get_node("../TeleportsScreen/CanvasLayer/Teleports")
 @onready var map_camera: Camera3D = get_node("../MapCamera/Camera3D")
 @onready var player_marker: MeshInstance3D = get_node("../PlayerMarker")
 @onready var teleport_marker: MeshInstance3D = get_node("../TeleportMarker")
@@ -193,16 +195,25 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 	self.right_controller_origin = self.right_controller.global_position
 	sphere.global_position += diff * self.ALTERING_SPEED
 	sphere.material_override.albedo_color = self.UPDATED_COLOR
-	
 
-func check_for_reset() -> void:
-	pass
+func test_for_reset() -> void:
+	var left_position: Vector3 = self.left_controller.global_position
+	var right_position: Vector3 = self.right_controller.global_position
+	
+	var dist = left_position.distance_to(right_position)
+	
+	if dist < self.RESET_THRESHOLD:
+		if self.point_one:
+			self.left_controller.remove_child(self.point_one)
+		self.point_one = null
 
 # Executed once per frame (core logic)
 func _process(delta: float) -> void:
 	if self.global_position.y < -10:
 		self.global_position = start_pos
 	
+	self.teleport_text.clear()
+	self.teleport_text.add_text("Teleports: " + str(self.num_teleports))
 	self.map_camera.global_position.x = self.global_position.x
 	self.map_camera.global_position.z = self.global_position.z
 	self.map_camera.global_position.y = self.global_position.y + self.CAM_HEIGHT
@@ -216,12 +227,15 @@ func _process(delta: float) -> void:
 	self.teleport_marker.global_position.y = self.point_two.global_position.y + self.MARKER_HEIGHT
 	
 	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
+	# Remove menu after calibration for left and right
 	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:
 		self.camera.remove_child(menu)
 	
 	# Need to hold the trigger and finish calibration to use pointer
 	if not self.show_pointer or self.left_calib_dist == 0.0 or self.right_calib_dist == 0.0:
 		return
+		
+	test_for_reset()
 		
 	if self.point_one == null:
 		highlight_all(right_controller)
@@ -245,13 +259,15 @@ func _process(delta: float) -> void:
 		alter_length(self.left_controller, delta)
 
 func _on_left_controller_button_pressed(name: String) -> void:
+	# Only allow teleport if left and right is calibrated
 	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
 		self.show_pointer = true
 	
-	if name == "grip_click" and self.left_calib_dist != 0.0 and self.point_two.visible:
+	# Only allow extending if pointer is visible
+	if name == "grip_click" and self.show_pointer:
 		self.extend_pointer = true
 	
-	# Left Calibration
+	# Left calibration
 	if name == "ax_button" and self.left_calib_dist == 0.0:
 		self.left_button.get_theme_stylebox("normal").bg_color = self.BUTTON_GREEN
 		var start: Vector3 = self.camera.global_position + self.TORSO_OFFSET
@@ -265,7 +281,7 @@ func check_for_static_bodies(area3D: Node3D) -> bool:
 	return false
 
 func _on_left_controller_button_released(name: String) -> void:
-	# Trigger cleanup
+	# Trigger release only occurs after left and right are calibrated
 	if name == "trigger_click" and self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0:
 		var is_overlapping: bool = check_for_static_bodies(point_two.get_child(0))
 		for i in range(self.n_points):
@@ -275,6 +291,7 @@ func _on_left_controller_button_released(name: String) -> void:
 		
 		if not is_overlapping:
 			self.global_position = self.point_two.global_position
+			self.num_teleports -= 1
 		
 		# Delete the duplicated point_two if it doesn't equal
 		# the original point_two
@@ -285,6 +302,7 @@ func _on_left_controller_button_released(name: String) -> void:
 		
 		if self.point_one:
 			self.left_controller.remove_child(self.point_one)
+			
 		for i in range(self.n_points):
 			self.sphere_meshes[i].visible = false
 		
