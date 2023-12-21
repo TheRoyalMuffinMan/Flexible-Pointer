@@ -39,7 +39,8 @@ var left_calib_dist: float = 0.0
 var right_calib_dist: float = 0.0
 var show_pointer: bool = false
 var altering_curve: bool = false
-var num_teloports: int = 100
+var extend_pointer: bool = false
+var num_teleports: int = 100
 
 func _ready():
 	for i in range(self.MAX_POINTS):
@@ -129,7 +130,6 @@ func generate_points(p0: Vector3, p1: Vector3, p2: Vector3) -> Array[Vector3]:
 		points.append(quadratic_bezier(p0, p1, p2, t))
 		t += incrementor
 	self.n_points = len(points)
-	
 	return points
 
 # Alters the avaliable sphere meshes to mimic to points produced by the
@@ -193,6 +193,10 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 	self.right_controller_origin = self.right_controller.global_position
 	sphere.global_position += diff * self.ALTERING_SPEED
 	sphere.material_override.albedo_color = self.UPDATED_COLOR
+	
+
+func check_for_reset() -> void:
+	
 
 # Executed once per frame (core logic)
 func _process(delta: float) -> void:
@@ -201,15 +205,15 @@ func _process(delta: float) -> void:
 	
 	self.map_camera.global_position.x = self.global_position.x
 	self.map_camera.global_position.z = self.global_position.z
-	self.map_camera.global_position.y = self.global_position.y + CAM_HEIGHT
+	self.map_camera.global_position.y = self.global_position.y + self.CAM_HEIGHT
 	
 	self.player_marker.global_position.x = self.global_position.x
 	self.player_marker.global_position.z = self.global_position.z
-	self.player_marker.global_position.y = self.global_position.y + MARKER_HEIGHT
+	self.player_marker.global_position.y = self.global_position.y + self.MARKER_HEIGHT
 	
 	self.teleport_marker.global_position.x = self.point_two.global_position.x
 	self.teleport_marker.global_position.z = self.point_two.global_position.z
-	self.teleport_marker.global_position.y = self.point_two.global_position.y + MARKER_HEIGHT
+	self.teleport_marker.global_position.y = self.point_two.global_position.y + self.MARKER_HEIGHT
 	
 	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
 	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:
@@ -258,7 +262,6 @@ func check_for_static_bodies(area3D: Node3D) -> bool:
 	for node in area3D.get_overlapping_bodies():
 		if node.is_class("StaticBody3D"):
 			return true
-			
 	return false
 
 func _on_left_controller_button_released(name: String) -> void:
