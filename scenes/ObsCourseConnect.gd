@@ -12,11 +12,16 @@ func _process(delta):
 	pass
 
 
-func _on_area_3d_body_entered(body):
-	if body.name == "Player":
-		tutorialDone.emit($thirdPlat/Area3D.global_position)
-
-
 func _on_top_warning_body_entered(body):
 	if body.name == "Player":
 		onTop.emit()
+
+
+func _on_tutorial_complete_body_entered(body):
+	if body.name == "Player":
+		tutorialDone.emit($thirdPlat/TutorialComplete.global_position)
+
+
+func _on_course_done_body_entered(body):
+	if body.name == "Player":
+		$FinishSound.play()
