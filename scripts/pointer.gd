@@ -26,6 +26,7 @@ const MARKER_HEIGHT: float = 4
 @onready var right_button: Button = get_node("../CalibrationScreen/CanvasLayer/Content/RightButton")
 @onready var map_camera: Camera3D = get_node("../MapCamera/Camera3D")
 @onready var player_marker: MeshInstance3D = get_node("../PlayerMarker")
+@onready var teleport_marker: MeshInstance3D = get_node("../TeleportMarker")
 @onready var start_pos: Vector3 = self.global_position
 
 # Instance Declarations
@@ -194,13 +195,17 @@ func _process(delta: float) -> void:
 	if self.global_position.y < -10:
 		self.global_position = start_pos
 	
-	map_camera.global_position.x = self.global_position.x
-	map_camera.global_position.z = self.global_position.z
-	map_camera.global_position.y = self.global_position.y + CAM_HEIGHT
+	self.map_camera.global_position.x = self.global_position.x
+	self.map_camera.global_position.z = self.global_position.z
+	self.map_camera.global_position.y = self.global_position.y + CAM_HEIGHT
 	
-	player_marker.global_position.x = self.global_position.x
-	player_marker.global_position.z = self.global_position.z
-	player_marker.global_position.y = self.global_position.y + MARKER_HEIGHT
+	self.player_marker.global_position.x = self.global_position.x
+	self.player_marker.global_position.z = self.global_position.z
+	self.player_marker.global_position.y = self.global_position.y + MARKER_HEIGHT
+	
+	self.teleport_marker.global_position.x = self.point_two.global_position.x
+	self.teleport_marker.global_position.z = self.point_two.global_position.z
+	self.teleport_marker.global_position.y = self.point_two.global_position.y + MARKER_HEIGHT
 	
 	var menu: MeshInstance3D = self.camera.find_child("SpatialMenu")
 	if self.left_calib_dist != 0.0 and self.right_calib_dist != 0.0 and menu != null:
@@ -226,6 +231,7 @@ func _process(delta: float) -> void:
 		mid = self.point_one.global_position
 	
 	self.point_two.visible = true
+	self.teleport_marker.visible = true
 	alter_meshes(generate_points(start, mid, end))	
 	alter_length(self.left_controller, delta)
 
@@ -258,6 +264,7 @@ func _on_left_controller_button_released(name: String) -> void:
 		
 		self.point_one = null
 		self.point_two.visible = false
+		self.teleport_marker.visible = false
 		self.show_pointer = false
 			
 func _on_right_controller_button_pressed(name: String) -> void:
@@ -278,13 +285,9 @@ func _on_right_controller_button_released(name: String) -> void:
 	if name == "grip_click" and self.right_calib_dist != 0.0 and self.point_two.visible:
 		self.altering_curve = false
 
-
-
-
 func _on_node_3d_tutorial_done(new_pos):
 	start_pos = new_pos
 	#TODO: Adjust number teloports 
-
 
 func _on_node_3d_on_top():
 	self.global_position.y = self.global_position.y - 4
