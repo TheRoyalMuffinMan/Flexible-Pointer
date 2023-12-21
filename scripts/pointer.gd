@@ -196,7 +196,7 @@ func alter_curve(sphere: MeshInstance3D) -> void:
 	
 
 func check_for_reset() -> void:
-	
+	pass
 
 # Executed once per frame (core logic)
 func _process(delta: float) -> void:
